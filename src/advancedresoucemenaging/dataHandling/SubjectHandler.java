@@ -17,31 +17,43 @@
 package advancedresoucemenaging.dataHandling;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
-
- @author Stanisalv
+ *
+ * @author Stanisalv
  */
-public class SubjectHandler extends Handler {
+public class SubjectHandler extends Handler
+{
 
-    public ArrayList<String> subjects;
+    public Map<String, Subject> subjectsMap;
+    public ArrayList<Subject> subjects;
 
-    public SubjectHandler() {
-	subjects = new ArrayList<>();
+    public SubjectHandler()
+    {
+        subjectsMap = new HashMap<>();
+        subjects = new ArrayList<>();
     }
 
     @Override
-    public void add(String name) {
-	subjects.add(name);
+    public void add(String name)
+    {
+        Subject newSub = new Subject(name);
+        subjects.add(newSub);
+        subjectsMap.put(name, newSub);
     }
 
     @Override
-    public void remove(String name) {
-	subjects.remove(name);
+    public void remove(String name)
+    {
+        subjects.remove(subjectsMap.get(name));
+        subjectsMap.remove(name);
     }
 
     @Override
-    public boolean contains(String name) {
-	return subjects.contains(name);
+    public boolean contains(String name)
+    {
+        return subjectsMap.containsKey(name);
     }
 }

@@ -21,6 +21,7 @@ import advancedresoucemenaging.GUIClasses.GradientPanel;
 import advancedresoucemenaging.dataHandling.GlobalSpace;
 import advancedresoucemenaging.dataHandling.GlobalStrings;
 import advancedresoucemenaging.algStuff.SubjectPlaceHolder;
+import advancedresoucemenaging.dataHandling.Subject;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -158,8 +159,8 @@ public class ClassesSetUp extends GradientPanel implements ActionListener, ListS
         subs.removeAllItems();
         for (int i = 0; i < GlobalSpace.subjectController.subjects.size(); i++)
         {
-            String object = GlobalSpace.subjectController.subjects.get(i);
-            subs.addItem(object);
+            Subject object = GlobalSpace.subjectController.subjects.get(i);
+            subs.addItem(object.getName());
         }
         teachers.removeAllItems();
         for (int i = 0; i < GlobalSpace.teacherController.teachers.size(); i++)

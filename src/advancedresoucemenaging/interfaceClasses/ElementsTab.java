@@ -28,10 +28,13 @@ import javax.swing.*;
 import net.miginfocom.swing.MigLayout;
 import static advancedresoucemenaging.GUIClasses.GUIElements.getButton;
 import advancedresoucemenaging.dataHandling.GlobalStrings;
+import advancedresoucemenaging.dataHandling.Subject;
 import com.alee.laf.scroll.WebScrollPane;
 import java.awt.PopupMenu;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import static java.awt.image.ImageObserver.WIDTH;
+import javafx.scene.input.MouseButton;
 
 /**
  *
@@ -43,6 +46,7 @@ public class ElementsTab extends GradientPanel implements ActionListener
     JList<Object> classes, subjects, teachers;
     DefaultListModel<Object> classesModel, subjectsModel, teachersModel;
     JButton add1, add2, add3, remove1, remove2, remove3;
+    JRadioButtonMenuItem easyButton, mediumButton, hardButton;
 
     public ElementsTab()
     {
@@ -66,24 +70,68 @@ public class ElementsTab extends GradientPanel implements ActionListener
 
         subjectsModel = new DefaultListModel<>();
         subjects = GUIElements.getList(subjectsModel);
+        ButtonGroup group = new ButtonGroup();
         JPopupMenu men = new JPopupMenu("hello");
-        men.add(new JRadioButtonMenuItem("Easy"));
-        men.add(new JRadioButtonMenuItem("Medium"));
-        men.add(new JRadioButtonMenuItem("Hard"));
+        easyButton = new JRadioButtonMenuItem("Easy");
+        easyButton.addActionListener((e) ->
+        {
+            GlobalSpace.subjectController.subjects.get(subjects.getSelectedIndex()).setHardness(1);
+        });
+        mediumButton = new JRadioButtonMenuItem("Medium");
+        mediumButton.addActionListener((e) ->
+        {
+            GlobalSpace.subjectController.subjects.get(subjects.getSelectedIndex()).setHardness(2);
+        });
+        hardButton = new JRadioButtonMenuItem("Hard");
+        hardButton.addActionListener((e) ->
+        {
+            GlobalSpace.subjectController.subjects.get(subjects.getSelectedIndex()).setHardness(3);
+        });
+        men.add(easyButton);
+        men.add(mediumButton);
+        men.add(hardButton);
+        group.add(easyButton);
+        group.add(mediumButton);
+        group.add(hardButton);
         subjects.add(men);
         subjects.addMouseListener(new MouseAdapter()
         {
 
             @Override
-            public void mouseClicked(MouseEvent e)
+            public void mouseReleased(MouseEvent e)
             {
-                if (e.getClickCount() == 2)
+
+                boolean con = subjects.locationToIndex(e.getPoint()) == subjects.getSelectedIndex();
+
+                if (!subjectsModel.isEmpty() && e.getButton() == MouseEvent.BUTTON3 && con)
                 {
-                    men.show(subjects, e.getX(), e.getY());
+
+                    int hardnes = GlobalSpace.subjectController.subjects.get(subjects.getSelectedIndex()).getHardness();
+                    switch (hardnes)
+                    {
+                        case Subject.EASY:
+                            easyButton.setSelected(true);
+                            break;
+                        case Subject.MEDIUM:
+                            mediumButton.setSelected(true);
+                            break;
+                        case Subject.HARD:
+                            hardButton.setSelected(true);
+                            break;
+
+                    }
+                    men.show(subjects,
+                            e.getX(), e.getY());
                 }
             }
 
         });
+
+        subjects.addListSelectionListener((event) ->
+        {
+
+        });
+
         WebScrollPane sp2 = new WebScrollPane(subjects);
         sp2.setPreferredSize(new Dimension(200, 300));
 
@@ -199,7 +247,7 @@ public class ElementsTab extends GradientPanel implements ActionListener
         }
         for (int i = 0; i < GlobalSpace.subjectController.subjects.size(); i++)
         {
-            subjectsModel.addElement(GlobalSpace.subjectController.subjects.get(i));
+            subjectsModel.addElement(GlobalSpace.subjectController.subjects.get(i).getName());
         }
         for (int i = 0; i < GlobalSpace.teacherController.teachers.size(); i++)
         {

@@ -21,6 +21,7 @@ import advancedresoucemenaging.GUIClasses.GUIElements;
 import advancedresoucemenaging.algStuff.SubjectPlaceHolder;
 import advancedresoucemenaging.conditionClasses.ConditionDescription;
 import advancedresoucemenaging.dataHandling.GlobalSpace;
+import advancedresoucemenaging.dataHandling.Subject;
 import advancedresoucemenaging.tableSTuff.WeekTable;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -36,9 +37,11 @@ import javax.swing.JPanel;
  *
  * @author Stanisalv
  */
-public class ConditionUI {
+public class ConditionUI
+{
 
-    public static JPanel getMustBeConsecitiveConditionUI(ConditionDescription desc) {
+    public static JPanel getMustBeConsecitiveConditionUI(ConditionDescription desc)
+    {
         JPanel rootPanel = new JPanel();
         rootPanel.setLayout(new BoxLayout(rootPanel, BoxLayout.Y_AXIS));
         rootPanel.setPreferredSize(new Dimension(400, 600));
@@ -47,26 +50,34 @@ public class ConditionUI {
 
         JComboBox<Object> subject1 = new JComboBox<>();
         subject1.setPreferredSize(new Dimension(135, 35));
-        for (String subject : GlobalSpace.subjectController.subjects) {
-            subject1.addItem(subject);
+        for (Subject subject : GlobalSpace.subjectController.subjects)
+        {
+            subject1.addItem(subject.getName());
         }
-        if (desc.getSubs().size() == 0) {
+        if (desc.getSubs().size() == 0)
+        {
             desc.getSubs().add(new SubjectPlaceHolder());
 
         }
-        if (subject1.getSelectedIndex() != -1) {
-            if (desc.getSubs().size() != 0) {
+        if (subject1.getSelectedIndex() != -1)
+        {
+            if (desc.getSubs().size() != 0)
+            {
                 subject1.setSelectedItem(desc.getSubs().get(0).getSubject());
-            } else {
+            } else
+            {
                 desc.getSubs().set(0, new SubjectPlaceHolder(subject1.getItemAt(0).toString(),
                         GlobalSpace.classController.getTeacher(desc.getClas(), subject1.getItemAt(0).toString())));
             }
         }
 
-        subject1.addActionListener(new ActionListener() {
+        subject1.addActionListener(new ActionListener()
+        {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                if (subject1.getSelectedIndex() == -1) {
+            public void actionPerformed(ActionEvent e)
+            {
+                if (subject1.getSelectedIndex() == -1)
+                {
                     return;
                 }
                 desc.getSubs().set(0, new SubjectPlaceHolder(subject1.getSelectedItem().toString(),
@@ -94,7 +105,8 @@ public class ConditionUI {
         return rootPanel;
     }
 
-    public static JPanel empty() {
+    public static JPanel empty()
+    {
         JPanel rootPanel = new JPanel();
         rootPanel.setLayout(new BoxLayout(rootPanel, BoxLayout.Y_AXIS));
         rootPanel.setPreferredSize(new Dimension(400, 600));

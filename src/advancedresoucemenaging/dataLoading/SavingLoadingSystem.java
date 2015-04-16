@@ -80,7 +80,9 @@ public class SavingLoadingSystem
             }
             while (!(line = bufferedReader.readLine()).equals("end!"))
             {
-                GlobalSpace.subjectController.add(line);
+                String parts[] = line.split("\\|");
+                GlobalSpace.subjectController.add(parts[0]);
+                GlobalSpace.subjectController.subjects.get(GlobalSpace.subjectController.subjects.size() - 1).setHardness(Integer.parseInt(parts[1]));
             }
             while (!(line = bufferedReader.readLine()).equals("end!"))
             {
@@ -173,7 +175,8 @@ public class SavingLoadingSystem
             bufferedWriter.newLine();
             for (int i = 0; i < GlobalSpace.subjectController.subjects.size(); i++)
             {
-                bufferedWriter.write(GlobalSpace.subjectController.subjects.get(i));
+                bufferedWriter.write(GlobalSpace.subjectController.subjects.get(i).getName());
+                bufferedWriter.write("|" + GlobalSpace.subjectController.subjects.get(i).getHardness());
                 bufferedWriter.newLine();
             }
             bufferedWriter.write("end!");

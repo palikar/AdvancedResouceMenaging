@@ -18,6 +18,7 @@ package advancedresoucemenaging.conditionClasses;
 
 import advancedresoucemenaging.dataHandling.GlobalSpace;
 import advancedresoucemenaging.algStuff.SubjectPlaceHolder;
+import advancedresoucemenaging.dataHandling.Subject;
 import java.awt.Component;
 import java.awt.Container;
 import java.util.ArrayList;
@@ -31,7 +32,8 @@ import javax.swing.JPanel;
  *
  * @author Stanisalv
  */
-public class ConditionDescription {
+public class ConditionDescription
+{
 
     int code;
     Map<String, String> params;
@@ -40,12 +42,15 @@ public class ConditionDescription {
     JPanel UI;
     String clas;
 
-    public ConditionDescription(int code, Map<String, String> params, ArrayList<SubjectPlaceHolder> subs) {
+    public ConditionDescription(int code, Map<String, String> params, ArrayList<SubjectPlaceHolder> subs)
+    {
         this.code = code;
         this.params = params;
         daysEnebled = new int[5][7];
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 7; j++) {
+        for (int i = 0; i < 5; i++)
+        {
+            for (int j = 0; j < 7; j++)
+            {
                 daysEnebled[i][j] = 0;
             }
         }
@@ -54,20 +59,25 @@ public class ConditionDescription {
 
     }
 
-    public ConditionDescription(String clas) {
+    public ConditionDescription(String clas)
+    {
         this.clas = clas;
         params = new HashMap<>();
         subs = new ArrayList<>();
         daysEnebled = new int[5][7];
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 7; j++) {
+        for (int i = 0; i < 5; i++)
+        {
+            for (int j = 0; j < 7; j++)
+            {
                 daysEnebled[i][j] = 0;
             }
         }
     }
 
-    private void createUI() {
-        switch (code) {
+    private void createUI()
+    {
+        switch (code)
+        {
             case 0:
                 UI = ConditionUI.empty();
                 break;
@@ -76,22 +86,27 @@ public class ConditionDescription {
         }
     }
 
-    public String getSaveString() {
+    public String getSaveString()
+    {
         StringBuilder builder = new StringBuilder("");
         builder.append(code).append("&");
-        for (int i = 0; i < subs.size(); i++) {
+        for (int i = 0; i < subs.size(); i++)
+        {
             SubjectPlaceHolder sub = subs.get(i);
             builder.append(sub.getSubject() + "+" + sub.getTeacher()).append("|");
 
         }
         builder.append("&");
         Object[] keys = params.keySet().toArray();
-        for (int i = 0; i < keys.length; i++) {
+        for (int i = 0; i < keys.length; i++)
+        {
             builder.append(keys[i] + ":" + params.get(keys[i])).append("|");
         }
         builder.append("&");
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 7; j++) {
+        for (int i = 0; i < 5; i++)
+        {
+            for (int j = 0; j < 7; j++)
+            {
                 builder.append(daysEnebled[i][j]);
             }
             builder.append("|");
@@ -101,12 +116,15 @@ public class ConditionDescription {
         return builder.toString();
     }
 
-    public ConditionDescription loadFromString(String str) {
+    public ConditionDescription loadFromString(String str)
+    {
         String firstPartition[] = str.split("\\&");
         this.code = Integer.parseInt(firstPartition[0]);
         String secondPartition[] = firstPartition[1].split("\\|");
-        for (int i = 0; i < secondPartition.length; i++) {
-            if (secondPartition[i].length() == 0) {
+        for (int i = 0; i < secondPartition.length; i++)
+        {
+            if (secondPartition[i].length() == 0)
+            {
                 continue;
             }
             String thirdPartition[] = secondPartition[i].split("\\+");
@@ -114,18 +132,23 @@ public class ConditionDescription {
         }
         System.out.println(firstPartition[2]);
         String secondPartition2[] = firstPartition[2].split("\\|");
-        for (int i = 0; i < secondPartition2.length; i++) {
-            if (secondPartition2[i].length() == 0) {
+        for (int i = 0; i < secondPartition2.length; i++)
+        {
+            if (secondPartition2[i].length() == 0)
+            {
                 continue;
             }
             String thirdPartition[] = secondPartition2[i].split("\\:");
             params.put(thirdPartition[0], thirdPartition[1]);
         }
         String secondPartition3[] = firstPartition[3].split("\\|");
-        for (int i = 0; i < secondPartition3.length; i++) {
+        for (int i = 0; i < secondPartition3.length; i++)
+        {
             String s = secondPartition3[i];
-            for (int j = 0; j < s.length(); j++) {
-                if (s.charAt(j) == '1') {
+            for (int j = 0; j < s.length(); j++)
+            {
+                if (s.charAt(j) == '1')
+                {
                     daysEnebled[i][j] = 1;
                 }
             }
@@ -134,8 +157,10 @@ public class ConditionDescription {
         return this;
     }
 
-    public JPanel refreshUI() {
-        if (UI == null) {
+    public JPanel refreshUI()
+    {
+        if (UI == null)
+        {
             createUI();
         }
         refresh(UI);
@@ -143,64 +168,79 @@ public class ConditionDescription {
 
     }
 
-    public void refresh(final Container c) {
+    public void refresh(final Container c)
+    {
         Component[] comps = c.getComponents();
-        for (Component comp : comps) {
-            if (comp instanceof JComboBox) {
+        for (Component comp : comps)
+        {
+            if (comp instanceof JComboBox)
+            {
                 int index = ((JComboBox) comp).getSelectedIndex();
                 JComboBox box = ((JComboBox) comp);
                 box.removeAllItems();
-                for (String subject : GlobalSpace.subjectController.subjects) {
-                    box.addItem(subject);
+                for (Subject subject : GlobalSpace.subjectController.subjects)
+                {
+                    box.addItem(subject.getName());
                 }
-                if (index < ((JComboBox) comp).getItemCount()) {
+                if (index < ((JComboBox) comp).getItemCount())
+                {
                     box.setSelectedIndex(index);
-                } else {
+                } else
+                {
                     box.setSelectedIndex(box.getItemCount() - 1);
                 }
 
             }
-            if (comp instanceof Container) {
+            if (comp instanceof Container)
+            {
                 refresh((Container) comp);
             }
         }
-  
+
     }
 
-    public JPanel getUI() {
-        if (UI == null) {
+    public JPanel getUI()
+    {
+        if (UI == null)
+        {
             createUI();
         }
         return UI;
     }
 
-    public int getCode() {
+    public int getCode()
+    {
         return code;
     }
 
-    public void setCode(int code) {
+    public void setCode(int code)
+    {
         this.code = code;
     }
 
-    public int[][] getDaysEnebled() {
+    public int[][] getDaysEnebled()
+    {
         return daysEnebled;
     }
 
-    public String getClas() {
+    public String getClas()
+    {
         return clas;
     }
 
-    public void setClas(String clas) {
+    public void setClas(String clas)
+    {
         this.clas = clas;
     }
 
-    public Map<String, String> getParams() {
+    public Map<String, String> getParams()
+    {
         return params;
     }
 
-    public ArrayList<SubjectPlaceHolder> getSubs() {
+    public ArrayList<SubjectPlaceHolder> getSubs()
+    {
         return subs;
     }
 
-   
 }

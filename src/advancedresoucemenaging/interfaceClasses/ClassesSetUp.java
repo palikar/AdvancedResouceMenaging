@@ -42,7 +42,7 @@ public class ClassesSetUp extends GradientPanel implements ActionListener, ListS
     DefaultListModel<Object> classesModel, subjectsModel;
     JList<Object> classes, subjects;
     JComboBox<Object> subs, teachers;
-    JTextField timesPerWeek;
+    JTextField timesPerWeek, times;
     TitledBorder addingSub;
     JButton add, remove;
     Map<SubjectPlaceHolder, Integer> currentMap;
@@ -105,7 +105,11 @@ public class ClassesSetUp extends GradientPanel implements ActionListener, ListS
         add(addingLable, "gapleft 0.5cm");
 
         timesL = new JLabel(GlobalStrings.timesPerWeekInClassSetUpPanel);
-        add(timesL, " wrap 0.25cm,gapleft 0.5cm, cell 3 2");
+        add(timesL, " gapleft 0.5cm, cell 3 2,split");
+
+        times = GUIElements.getTextField();
+        times.setPreferredSize(new Dimension(50, 25));
+        add(times, " wrap 0.25cm, gapleft 0.5cm, split");
 
         JLabel subsCL = new JLabel(GlobalStrings.subjectString);
         add(subsCL, "gapleft 0.5cm, split 2");
@@ -221,7 +225,7 @@ public class ClassesSetUp extends GradientPanel implements ActionListener, ListS
         {
             if (subjects.getSelectedIndex() != -1)
             {
-                timesL.setText(GlobalStrings.timesPerWeekInClassSetUpPanel + currentMap.get(subjectsModel.get(subjects.getSelectedIndex())));
+                times.setText("" + currentMap.get(subjectsModel.get(subjects.getSelectedIndex())));
             }
         }
     }

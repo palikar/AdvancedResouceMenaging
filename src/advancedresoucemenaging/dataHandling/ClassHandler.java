@@ -85,10 +85,10 @@ public class ClassHandler extends Handler
     {
     }
 
-    public void setUpController(Controller controll)
+    public void setUpController(Controller controll, ArrayList<Class> classes)
     {
 
-        for (Class clas : classes.values())
+        for (Class clas : classes)
         {
 
             String name = clas.name;
@@ -106,9 +106,9 @@ public class ClassHandler extends Handler
             controll.addClass(node);
         }
         controll.setUpClasses();
-        Class[] classArray = new Class[classes.values().size()];
-        classes.values().toArray(classArray);
-        for (int i = 0; i < classes.values().size(); i++)
+        Class[] classArray = new Class[classes.size()];
+        classes.toArray(classArray);
+        for (int i = 0; i < classes.size(); i++)
         {
             SubjectPlaceHolder[][] schedule = classArray[i].schedule;
             for (int j = 0; j < schedule.length; j++)

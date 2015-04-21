@@ -22,6 +22,8 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +31,8 @@ import java.util.Map;
  *
  * @author Stanisalv
  */
-public class GlobalSpace {
+public class GlobalSpace
+{
 
     static public ClassHandler classController;
     static public TeacherHandler teacherController;
@@ -41,35 +44,82 @@ public class GlobalSpace {
     public static boolean ready = false;
     public static BufferedImage iconImage = null;
 
-    static {
+    static
+    {
         classController = new ClassHandler();
         teacherController = new TeacherHandler();
         subjectController = new SubjectHandler();
         params = new HashMap<>();
     }
 
-    public static void setParam(Object param, Object value) {
+    public static void setParam(Object param, Object value)
+    {
         params.put(param, value);
     }
 
-    public static void addParam(Object param) {
-        if (!params.containsKey(param)) {
+    public static void addParam(Object param)
+    {
+        if (!params.containsKey(param))
+        {
             params.put(param, "");
         }
     }
 
-    public static void setUpController() {
-        algControll = new Controller();
-        classController.setUpController(algControll);
+    public static void setUpController()
+    {
+
     }
 
-    public static void makePlan() {
-        algControll.make();
+    public static void makePlan()
+    {
+        algControll = new Controller();
+
+        Map<String, ArrayList<Class>> classMap = new HashMap<>();
+        classController.classes.values().forEach((Class clas) ->
+        {
+            String name = clas.name;
+            String grade = null;
+            if (name.length() == 2)
+            {
+                grade = name.substring(0, 1);
+
+            } else if (name.length() == 3)
+            {
+                grade = name.substring(0, 2);
+            }
+            if (grade == null)
+            {
+                throw new RuntimeException("You have way too many calsses");
+            }
+            if (classMap.containsKey(grade))
+            {
+                classMap.get(grade).add(clas);
+            } else
+            {
+
+                classMap.put(grade, new ArrayList<Class>());
+                classMap.get(grade).add(clas);
+            }
+
+        });
+
+        classMap.values().forEach((ArrayList<Class> classes) ->
+        {
+            classController.setUpController(algControll, new ArrayList<>(classes));
+            algControll.make();
+        });
+
         ready = true;
+        updateClassController();
+    }
+
+    public static void updateClassController()
+    {
         classController.getReadySchedule(algControll);
     }
 
-    public static void deleteEverything() {
+    public static void deleteEverything()
+    {
         classController = new ClassHandler();
         teacherController = new TeacherHandler();
         subjectController = new SubjectHandler();
@@ -78,7 +128,8 @@ public class GlobalSpace {
         principle = "default";
     }
 
-    public static BufferedImage resizeImage(BufferedImage originalImage, int type, int width, int height) {
+    public static BufferedImage resizeImage(BufferedImage originalImage, int type, int width, int height)
+    {
         BufferedImage resizedImage = new BufferedImage(width, height, type);
         Graphics2D g = resizedImage.createGraphics();
         g.drawImage(originalImage, 0, 0, width, height, null);

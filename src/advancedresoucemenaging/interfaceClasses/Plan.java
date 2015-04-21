@@ -31,6 +31,9 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import net.miginfocom.swing.MigLayout;
 
@@ -73,16 +76,25 @@ public class Plan extends GradientPanel
             JFileChooser chooser = new JFileChooser();
             chooser.setFont(new Font("SansSerif", Font.ITALIC | Font.BOLD, 10));
             chooser.setSelectedFile(new File("School_Schadule_" + System.currentTimeMillis() / 1000 + ".pdf"));
+
             if (chooser.showSaveDialog(this) == chooser.APPROVE_OPTION)
             {
-                SavingLoadingSystem.saveClassesScheduleToPdf(chooser.getSelectedFile());
+
+                try
+                {
+                    SavingLoadingSystem.saveClassesScheduleToPdf(
+                            new File(chooser.getSelectedFile().getCanonicalPath() + ".pdf"));
+                } catch (IOException ex)
+                {
+                    Logger.getLogger(Plan.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         add(print, "gaptop 0.5cm");
 
         makePlan = GUIElements.getButton(GlobalStrings.makeString);
         makePlan.setBounds(385, 25, 125, 35);
-        makePlan.addActionListener((event) ->
+        makePlan.addActionListener((ActionEvent event) ->
         {
             new Thread(new Runnable()
             {
@@ -94,6 +106,28 @@ public class Plan extends GradientPanel
                     GlobalSpace.makePlan();
                     model.fireTableDataChanged();
                     table.repaint();
+
+                }
+            }).start();
+            new Thread(new Runnable()
+            {
+
+                @Override
+                public void run()
+                {
+                    while (!GlobalSpace.ready)
+                    {
+                        try
+                        {
+                            GlobalSpace.updateClassController();
+                            model.fireTableDataChanged();
+                            table.repaint();
+                            Thread.sleep(50);
+                        } catch (InterruptedException ex)
+                        {
+                            Logger.getLogger(Plan.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
 
                 }
             }).start();

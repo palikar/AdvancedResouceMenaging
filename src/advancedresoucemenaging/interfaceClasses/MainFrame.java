@@ -272,7 +272,14 @@ public class MainFrame extends JFrame implements ActionListener
             chooser.setSelectedFile(new File("School_Schadule_" + System.currentTimeMillis() / 1000 + ".pdf"));
             if (chooser.showSaveDialog(this) == chooser.APPROVE_OPTION)
             {
-                SavingLoadingSystem.saveClassesScheduleToPdf(chooser.getSelectedFile());
+                try
+                {
+                    SavingLoadingSystem.saveClassesScheduleToPdf(
+                            new File(chooser.getSelectedFile().getCanonicalPath() + ".pdf"));
+                } catch (IOException ex)
+                {
+                    Logger.getLogger(Plan.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
     }

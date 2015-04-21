@@ -30,6 +30,9 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import net.miginfocom.swing.MigLayout;
 
@@ -77,7 +80,14 @@ public class TeacherSchedule extends GradientPanel
             chooser.setSelectedFile(new File("Teacher_Schadule_" + System.currentTimeMillis() / 1000 + ".pdf"));
             if (chooser.showSaveDialog(this) == chooser.APPROVE_OPTION)
             {
-                SavingLoadingSystem.saveTeachersScheduleToPdf(chooser.getSelectedFile());
+                try
+                {
+                    SavingLoadingSystem.saveTeachersScheduleToPdf(
+                            new File(chooser.getSelectedFile().getCanonicalPath() + ".pdf"));
+                } catch (IOException ex)
+                {
+                    Logger.getLogger(Plan.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         add(print, "wrap 0.5cm,gaptop 0.5cm");

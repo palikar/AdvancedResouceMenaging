@@ -45,7 +45,7 @@ public class ClassNode
 
         for (int i = 0; i < 5; i++)
         {
-            days.add(new DayNode());
+            days.add(new DayNode(i));
         }
         for (int i = 0; i < 5; i++)
         {
@@ -168,5 +168,17 @@ public class ClassNode
         return ((ClassNode) obj).name.equals(this.name);
     }
 
-   
+    public ArrayList<HourNode> getHours()
+    {
+        ArrayList<HourNode> list = new ArrayList<>();
+        for (int i = 0; i < 7; i++)
+        {
+            for (int j = 0; j < 5; j++)
+            {
+                list.add(days.get(j).hours.get(i));
+            }
+        }
+        return list;
+    }
+
 }

@@ -53,6 +53,7 @@ public final class Controller
 
     public boolean assign(ListIterator<HourNode> nodes)
     {
+        //  print();
         if (allReady())
         {
             return true;
@@ -77,15 +78,17 @@ public final class Controller
         {
             return assign(state.listIterator(index + 1));
         }
+        if (node.prevHour != null && !node.prevHour.isSet())
+        {
+            return false;
+        }
         for (int i = 0; i < node.domain.size(); i++)
         {
-            
+
             SubjectPlaceHolder sub = node.domain.get(i);
-            if (!node.set(sub))
-            {
-                node.unSet();
-                continue;
-            }
+            node.set(sub);
+
+          
             if (!node.sameClass.isReady())
             {
                 if (assign(state.listIterator(index + 1)))
@@ -194,12 +197,6 @@ public final class Controller
 
     }
 
-    public boolean set()
-    {
-
-        return false;
-    }
-
     public void make()
     {
         for (int i = 0; i < classes.size(); i++)
@@ -211,12 +208,36 @@ public final class Controller
                     state.add(classes.get(i).days.get(k).hours.get(j));
                     if (shuffling)
                     {
-                        Collections.shuffle(classes.get(i).days.get(k).hours.get(j).domain);
+                        classes.get(i).days.get(k).hours.get(j).sortByHardness();
                     }
                 }
             }
         }
-        assign(state.listIterator());
+        System.out.println("Es hat angefangen");
+        if (!assign(state.listIterator()))
+        {
+            System.out.println("Es ist eine Scheisskoniguration");
+        } else
+        {
+            System.out.println("Das Prozess ist fertig");
+        }
+    }
+
+    private boolean checkForEmptyDomains(HourNode currentNode)
+    {
+        for (ClassNode classNode : classes)
+        {
+            for (DayNode dayNode : classNode.days)
+            {
+
+                if (dayNode.hours.get(0).aloneEmpyDomain())
+                {
+                    return true;
+                }
+
+            }
+        }
+        return false;
     }
 
     public ArrayList<ClassNode> getClasses()

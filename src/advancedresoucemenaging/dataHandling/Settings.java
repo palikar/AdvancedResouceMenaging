@@ -20,8 +20,12 @@ package advancedresoucemenaging.dataHandling;
  *
  * @author Stanisalv
  */
-public class Settings {
+public class Settings
+{
 
     public static boolean shuffling = false;
+    public static boolean hardnesSort = false;
+    public static boolean complateGeneration = false;
+    public static boolean mistakeCheckerSkip = false;
 
 }

@@ -16,12 +16,14 @@
  */
 package advancedresoucemenaging.dataHandling;
 
+import javax.swing.Action;
 
 /**
  *
  * @author Stanisalv
  */
-public class GlobalStrings {
+public class GlobalStrings
+{
 
     public static String teachersString = "Учители:";
     public static String subjectsString = "Предмети:";
@@ -29,7 +31,7 @@ public class GlobalStrings {
     public static String timesPerWeekInClassSetUpPanel = "Часове в седмицата:";
     public static String tooManySameSubsInWeek = "Твърде много часове в седмицата";
     public static String sameSubInAnotherClass = "На това място има същия предмет в друг клас";
-    public static String titleString = "Урпавление на ресурси в училище";
+    public static String titleString = "Управление на ресурси в училище";
     public static String mainPanelString = "Основен панел";
     public static String elementPanelString = "Елементи";
     public static String classesPanelString = "Класове";
@@ -64,7 +66,7 @@ public class GlobalStrings {
     public static String clearClassString = "Изчисти класа";
     public static String propartiesSting = "Свойства:";
     public static String parametarsString = "Параметри:";
-    public static String newPorpartyString = "Нов свойство";
+    public static String newPorpartyString = "Ново свойство";
     public static String errorSting = "Грешка";
     public static String typeString = "Тип";
     public static String noSelectedClass = "Няма избран клас";
@@ -88,4 +90,10 @@ public class GlobalStrings {
     public static String renderImageString = "Показвай изображение";
     public static String renderGredientString = "Показвай градиент";
     public static String saveToPdfString = "Запази в PDF файл";
+    public static String hardesSortString = "Подреждане по трудност";
+    public static String hardesSortStringToolTipString = "Програмата ще се стреми да постави предметите с по-голяма трудност в началото на деня";
+    public static String complateGeneration = "Пълно изчерпане";
+    public static String complateGenerationToolTipString = "Програмата ще се опита да генерира разписанието на всички класове на веднъж";
+    public static String mistakeCheckerSkip = "Презкачане на прогверката за грешки";
+    public static String mistakeCheckerSkipToolTipString = "Програмата няма да провери първоначално изготвеното разписание за грешки";
 }

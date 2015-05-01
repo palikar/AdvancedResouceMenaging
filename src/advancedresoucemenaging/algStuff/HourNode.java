@@ -23,6 +23,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -301,6 +302,53 @@ public class HourNode
                 return 1;
             }
             return 0;
+        });
+    }
+
+    public void shuffelDomain(boolean sorted)
+    {
+        if (!sorted)
+        {
+            Collections.shuffle(domain);
+        } else
+        {
+            shuffelSorted();
+        }
+    }
+
+    private void shuffelSorted()
+    {
+        Map<Integer, ArrayList<SubjectPlaceHolder>> map = new HashMap<>();
+        domain.forEach(element ->
+        {
+            int hardess = GlobalSpace.subjectController.subjectsMap.get(element.getSubject()).getHardness();
+            if (!map.containsKey(hardess))
+            {
+                map.put(hardess, new ArrayList<SubjectPlaceHolder>());
+            }
+            map.get(hardess).add(element);
+        }
+        );
+        map.values().forEach(element ->
+        {
+            Collections.shuffle(element);
+        });
+        domain.clear();
+
+        for (int i = 3; i >= 1; i--)
+        {
+            for (Map.Entry<Integer, ArrayList<SubjectPlaceHolder>> entry : map.entrySet())
+            {
+                if (entry.getKey() == i)
+                {
+                    domain.addAll(entry.getValue());
+                }
+
+            }
+        }
+        domain.forEach(element ->
+        {
+            System.out.println(element.getSubject());
         });
     }
 

@@ -58,9 +58,6 @@ public class SavingLoadingSystem
             GlobalSpace.deleteEverything();
             GlobalSpace.school = bufferedReader.readLine();
             GlobalSpace.principle = bufferedReader.readLine();
-            Settings.shuffling = Boolean.valueOf(bufferedReader.readLine());
-            GUIControll.renderGredient = Boolean.valueOf(bufferedReader.readLine());
-            GUIControll.renderLogoImage = Boolean.valueOf(bufferedReader.readLine());
 
             while (!(line = bufferedReader.readLine()).equals("end!"))
             {
@@ -141,12 +138,6 @@ public class SavingLoadingSystem
             bufferedWriter.write(GlobalSpace.school);
             bufferedWriter.newLine();
             bufferedWriter.write(GlobalSpace.principle);
-            bufferedWriter.newLine();
-            bufferedWriter.write(Boolean.toString(Settings.shuffling));
-            bufferedWriter.newLine();
-            bufferedWriter.write(Boolean.toString(GUIControll.renderGredient));
-            bufferedWriter.newLine();
-            bufferedWriter.write(Boolean.toString(GUIControll.renderLogoImage));
             bufferedWriter.newLine();
 
             Iterator<Object> paramKeys = GlobalSpace.params.keySet().iterator();

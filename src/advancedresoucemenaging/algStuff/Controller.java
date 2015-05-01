@@ -88,7 +88,6 @@ public final class Controller
             SubjectPlaceHolder sub = node.domain.get(i);
             node.set(sub);
 
-          
             if (!node.sameClass.isReady())
             {
                 if (assign(state.listIterator(index + 1)))
@@ -206,9 +205,13 @@ public final class Controller
                 for (int k = 0; k < 5; k++)
                 {
                     state.add(classes.get(i).days.get(k).hours.get(j));
-                    if (shuffling)
+                    if (Settings.hardnesSort)
                     {
                         classes.get(i).days.get(k).hours.get(j).sortByHardness();
+                    }
+                    if (Settings.shuffling)
+                    {
+                        classes.get(i).days.get(k).hours.get(j).shuffelDomain(Settings.hardnesSort);
                     }
                 }
             }

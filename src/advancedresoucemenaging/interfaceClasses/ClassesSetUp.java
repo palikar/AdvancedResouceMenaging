@@ -28,6 +28,8 @@ import java.awt.event.ActionListener;
 import java.util.Map;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import net.miginfocom.swing.MigLayout;
@@ -39,8 +41,10 @@ import net.miginfocom.swing.MigLayout;
 public class ClassesSetUp extends GradientPanel implements ActionListener, ListSelectionListener
 {
 
-    DefaultListModel<Object> classesModel, subjectsModel;
-    JList<Object> classes, subjects;
+    DefaultListModel<Object> classesModel;
+    DefaultListModel<SubjectPlaceHolder> subjectsModel;
+    JList<Object> classes;
+    JList<SubjectPlaceHolder> subjects;
     JComboBox<Object> subs, teachers;
     JTextField timesPerWeek, times;
     TitledBorder addingSub;
@@ -66,7 +70,7 @@ public class ClassesSetUp extends GradientPanel implements ActionListener, ListS
         add(sp2, "gapleft 0.5cm,span 3");
 
         subjectsModel = new DefaultListModel<>();
-        subjects = GUIElements.getList(subjectsModel);
+        subjects = new JList<SubjectPlaceHolder>(subjectsModel);
         subjects.setCellRenderer(new ListCellRenderer<Object>()
         {
 
@@ -109,6 +113,47 @@ public class ClassesSetUp extends GradientPanel implements ActionListener, ListS
 
         times = GUIElements.getTextField();
         times.setPreferredSize(new Dimension(50, 25));
+        times.getDocument().addDocumentListener(new DocumentListener()
+        {
+
+            @Override
+            public void insertUpdate(DocumentEvent e)
+            {
+                if (subjects.getSelectedIndex() != -1 && !times.getText().replace(" ", "").equals(""))
+                {
+
+                    int newTimes = Integer.parseInt(times.getText());
+                    SubjectPlaceHolder sub = subjectsModel.get(subjects.getSelectedIndex());
+                    GlobalSpace.classController.classes.get(classes.getSelectedValue().toString()).subjectPlan.put(sub, newTimes);
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e)
+            {
+                if (subjects.getSelectedIndex() != -1 && !times.getText().replace(" ", "").equals(""))
+                {
+
+                    int newTimes = Integer.parseInt(times.getText());
+                    SubjectPlaceHolder sub = subjectsModel.get(subjects.getSelectedIndex());
+                    GlobalSpace.classController.classes.get(classes.getSelectedValue().toString()).subjectPlan.put(sub, newTimes);
+                }
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e)
+            {
+
+                if (subjects.getSelectedIndex() != -1 && !times.getText().replace(" ", "").equals(""))
+                {
+
+                    int newTimes = Integer.parseInt(times.getText());
+                    SubjectPlaceHolder sub = subjectsModel.get(subjects.getSelectedIndex());
+                    GlobalSpace.classController.classes.get(classes.getSelectedValue().toString()).subjectPlan.put(sub, newTimes);
+                }
+
+            }
+        });
         add(times, " wrap 0.25cm, gapleft 0.5cm, split");
 
         JLabel subsCL = new JLabel(GlobalStrings.subjectString);
@@ -205,9 +250,8 @@ public class ClassesSetUp extends GradientPanel implements ActionListener, ListS
         {
             Map<SubjectPlaceHolder, Integer> map = GlobalSpace.classController.classes.get(classes.getSelectedValue()).subjectPlan;
             currentMap = map;
-            Object keys[] = map.keySet().toArray();
             subjectsModel.clear();
-            for (Object key : keys)
+            for (SubjectPlaceHolder key : map.keySet())
             {
                 subjectsModel.addElement(key);
             }

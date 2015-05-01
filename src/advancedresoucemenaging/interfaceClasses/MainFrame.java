@@ -62,6 +62,9 @@ public class MainFrame extends JFrame implements ActionListener
     private final WebCheckBoxMenuItem shuffle;
     private final WebCheckBoxMenuItem image;
     private final WebCheckBoxMenuItem gradient;
+    private final WebCheckBoxMenuItem harndesSort;
+    private final WebCheckBoxMenuItem complateGeneration;
+    private final WebCheckBoxMenuItem mistakeCheckerSkip;
 
     public MainFrame()
     {
@@ -148,9 +151,36 @@ public class MainFrame extends JFrame implements ActionListener
         //Settings Menue Code
         WebMenu settingsMenu = new WebMenu(GlobalStrings.settingsString);
         shuffle = new WebCheckBoxMenuItem(GlobalStrings.shuffleString);
-        shuffle.addActionListener(this);
+        shuffle.addActionListener(event ->
+        {
+            Settings.shuffling = shuffle.isSelected();
+        });
         shuffle.setToolTipText(GlobalStrings.shuffleToolTipString);
         settingsMenu.add(shuffle);
+        harndesSort = new WebCheckBoxMenuItem(GlobalStrings.hardesSortString);
+        harndesSort.addActionListener(event ->
+        {
+            Settings.hardnesSort = harndesSort.isSelected();
+        });
+        harndesSort.setToolTipText(GlobalStrings.hardesSortStringToolTipString);
+        settingsMenu.add(harndesSort);
+
+        complateGeneration = new WebCheckBoxMenuItem(GlobalStrings.complateGeneration);
+        harndesSort.addActionListener(event ->
+        {
+            Settings.complateGeneration = complateGeneration.isSelected();
+        });
+        complateGeneration.setToolTipText(GlobalStrings.complateGenerationToolTipString);
+        settingsMenu.add(complateGeneration);
+     
+        mistakeCheckerSkip = new WebCheckBoxMenuItem(GlobalStrings.mistakeCheckerSkip);
+        mistakeCheckerSkip.addActionListener(event ->
+        {
+            Settings.mistakeCheckerSkip = mistakeCheckerSkip.isSelected();
+        });
+        mistakeCheckerSkip.setToolTipText(GlobalStrings.mistakeCheckerSkipToolTipString);
+        settingsMenu.add(mistakeCheckerSkip);
+
         menuBar.add(settingsMenu);
 
         //GUI menue
@@ -253,10 +283,6 @@ public class MainFrame extends JFrame implements ActionListener
             }
             refresh();
             repaint();
-        } else if (e.getSource().equals(shuffle))
-        {
-            Settings.shuffling = shuffle.isSelected();
-
         } else if (e.getSource().equals(image))
         {
             GUIControll.renderLogoImage = image.isSelected();

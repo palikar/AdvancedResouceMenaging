@@ -82,11 +82,19 @@ public final class Controller
         {
             return false;
         }
+        if (node.domain.size() == 0)
+        {
+            return false;
+        }
         for (int i = 0; i < node.domain.size(); i++)
         {
 
             SubjectPlaceHolder sub = node.domain.get(i);
             node.set(sub);
+            if(checkForHoles()){
+                node.unSet();
+                continue;
+            }
 
             if (!node.sameClass.isReady())
             {
@@ -226,16 +234,25 @@ public final class Controller
         }
     }
 
-    private boolean checkForEmptyDomains(HourNode currentNode)
+    private boolean checkForHoles()
     {
         for (ClassNode classNode : classes)
         {
             for (DayNode dayNode : classNode.days)
             {
-
-                if (dayNode.hours.get(0).aloneEmpyDomain())
+                for (HourNode hourNode : dayNode.hours)
                 {
-                    return true;
+                    if (!hourNode.isSet())
+                    {
+                        if (hourNode.prevHour == null && hourNode.nextHour.isSet())
+                        {
+                            return true;
+                        }
+                        if (hourNode.nextHour != null && (hourNode.nextHour.isSet() && hourNode.prevHour.isSet()))
+                        {
+                            return true;
+                        }
+                    }
                 }
 
             }

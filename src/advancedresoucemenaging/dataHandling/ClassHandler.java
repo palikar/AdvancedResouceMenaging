@@ -23,7 +23,6 @@ import advancedresoucemenaging.algStuff.DayNode;
 import advancedresoucemenaging.algStuff.HourNode;
 import advancedresoucemenaging.algStuff.SubjectPlaceHolder;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 

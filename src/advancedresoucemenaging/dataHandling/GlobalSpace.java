@@ -40,6 +40,7 @@ public class GlobalSpace
     static public String school = "", principle = "";
     static public Map<Object, Object> params;
     static public Controller algControll;
+    static public ClassChecker mistakeFixer;
     static public File openeFile = null;
     public static boolean ready = false;
     public static BufferedImage iconImage = null;
@@ -50,6 +51,7 @@ public class GlobalSpace
         teacherController = new TeacherHandler();
         subjectController = new SubjectHandler();
         params = new HashMap<>();
+        mistakeFixer = new ClassChecker();
     }
 
     public static void setParam(Object param, Object value)
@@ -91,16 +93,11 @@ public class GlobalSpace
             {
                 throw new RuntimeException("You have way too many calsses");
             }
-            if (classMap.containsKey(grade))
+            if (!classMap.containsKey(grade))
             {
-                classMap.get(grade).add(clas);
-            } else
-            {
-
                 classMap.put(grade, new ArrayList<Class>());
-                classMap.get(grade).add(clas);
             }
-
+            classMap.get(grade).add(clas);
         });
 
         classMap.values().forEach((ArrayList<Class> classes) ->
@@ -108,9 +105,10 @@ public class GlobalSpace
             classController.setUpController(algControll, new ArrayList<>(classes));
             algControll.make();
         });
-
-        ready = true;
         updateClassController();
+        mistakeFixer.fixMistakes(classController.classes);
+        ready = true;
+
     }
 
     public static void updateClassController()

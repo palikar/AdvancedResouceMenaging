@@ -35,7 +35,7 @@ public class ClassChecker {
     public ClassChecker() {
     }
 
-    public void fixMistakes(Map<String, Class> classes) {
+    public void findMistakes(Map<String, Class> classes) {
         this.classesOld = classes;
         int numClasses = classes.values().size();
         subsArray = new SubjectPlaceHolder[numClasses][5][7];

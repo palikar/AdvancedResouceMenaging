@@ -19,6 +19,7 @@ package advancedresoucemenaging.algStuff;
 import advancedresoucemenaging.conditionClasses.MustBeConsecitiveCondition;
 import advancedresoucemenaging.conditionClasses.Condition;
 import advancedresoucemenaging.dataHandling.GlobalSpace;
+import advancedresoucemenaging.dataHandling.ScheduleFabrik;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -168,7 +169,7 @@ public class HourNode {
     }
 
     private boolean propagetThroughSingeltoneDomains() {
-        ArrayList<HourNode> allNodes = GlobalSpace.algControll.state;
+        ArrayList<HourNode> allNodes = ScheduleFabrik.algControll.state;
         for (HourNode node : allNodes) {
 
             if (node.isSingeltoneDomain() && !node.isSet() && !node.sameClass.isReady()) {

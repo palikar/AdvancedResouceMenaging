@@ -39,8 +39,7 @@ public class GlobalSpace
     static public SubjectHandler subjectController;
     static public String school = "", principle = "";
     static public Map<Object, Object> params;
-    static public Controller algControll;
-    static public ClassChecker mistakeFixer;
+
     static public File openeFile = null;
     public static boolean ready = false;
     public static BufferedImage iconImage = null;
@@ -51,7 +50,7 @@ public class GlobalSpace
         teacherController = new TeacherHandler();
         subjectController = new SubjectHandler();
         params = new HashMap<>();
-        mistakeFixer = new ClassChecker();
+
     }
 
     public static void setParam(Object param, Object value)
@@ -74,7 +73,7 @@ public class GlobalSpace
 
     public static void makePlan()
     {
-        algControll = new Controller();
+        ScheduleFabrik.algControll = new Controller();
 
         Map<String, ArrayList<Class>> classMap = new HashMap<>();
         classController.getClasses().values().forEach((Class clas) ->
@@ -102,18 +101,18 @@ public class GlobalSpace
 
         classMap.values().forEach((ArrayList<Class> classes) ->
         {
-            classController.setUpController(algControll, new ArrayList<>(classes));
-            algControll.make();
+            classController.setUpController(ScheduleFabrik.algControll, new ArrayList<>(classes));
+            ScheduleFabrik.algControll.make();
         });
         updateClassController();
-        mistakeFixer.fixMistakes(classController.getClasses());
+        ScheduleFabrik.mistakeFinder.findMistakes(classController.getClasses());
         ready = true;
 
     }
 
     public static void updateClassController()
     {
-        classController.getReadySchedule(algControll);
+        classController.getReadySchedule(ScheduleFabrik.algControll);
     }
 
     public static void deleteEverything()
@@ -121,7 +120,8 @@ public class GlobalSpace
         classController = new ClassHandler();
         teacherController = new TeacherHandler();
         subjectController = new SubjectHandler();
-        algControll = new Controller();
+        ScheduleFabrik.algControll = new Controller();
+        ScheduleFabrik.mistakeFinder = new ClassChecker();
         school = "default";
         principle = "default";
     }

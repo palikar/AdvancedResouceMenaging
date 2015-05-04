@@ -97,7 +97,7 @@ public class MainFrame extends JFrame implements ActionListener
         tabs.add(new StudentScheduleTab(), GlobalStrings.planForStudPanelString);
         tabs.add(new TeacherScheduleTab(), GlobalStrings.planForTeachPanelString);
         tabs.add(new PreScheduleTab(), GlobalStrings.prePlanPanelString);
-       // tabs.add(new Proparties(), GlobalStrings.propPanelString);
+        //tabs.add(new ClassesConditionsTab(), GlobalStrings.propPanelString);
 
         //Tabs hot keys
         tabs.setMnemonicAt(0, KeyEvent.VK_M);
@@ -172,7 +172,7 @@ public class MainFrame extends JFrame implements ActionListener
         });
         complateGeneration.setToolTipText(GlobalStrings.complateGenerationToolTipString);
         settingsMenu.add(complateGeneration);
-     
+
         mistakeCheckerSkip = new WebCheckBoxMenuItem(GlobalStrings.mistakeCheckerSkip);
         mistakeCheckerSkip.addActionListener(event ->
         {

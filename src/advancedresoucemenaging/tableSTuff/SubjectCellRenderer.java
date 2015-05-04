@@ -29,7 +29,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 
  @author Stanisalv
  */
-public class CustomCellRenderer extends DefaultTableCellRenderer {
+public class SubjectCellRenderer extends DefaultTableCellRenderer {
 
     JPanel panel;
     JLabel lable;

@@ -22,7 +22,7 @@ import advancedresoucemenaging.GUIClasses.GradientPanel;
 import advancedresoucemenaging.dataHandling.GlobalSpace;
 import advancedresoucemenaging.dataHandling.GlobalStrings;
 import advancedresoucemenaging.dataLoading.SavingLoadingSystem;
-import advancedresoucemenaging.tableSTuff.JTableLableRenderer;
+import advancedresoucemenaging.tableSTuff.JLableCellRenderer;
 import advancedresoucemenaging.tableSTuff.TableControl;
 import advancedresoucemenaging.tableSTuff.TeacherPlanModel;
 import java.awt.Dimension;
@@ -110,7 +110,7 @@ public class TeacherSchedule extends GradientPanel
 
         table.setCellSelectionEnabled(true);
 
-        table.setDefaultRenderer(Object.class, new JTableLableRenderer());
+        table.setDefaultRenderer(Object.class, new JLableCellRenderer());
 
         table.getColumnModel().getColumn(0).setPreferredWidth(45);
         table.getColumnModel().getColumn(1).setPreferredWidth(137);

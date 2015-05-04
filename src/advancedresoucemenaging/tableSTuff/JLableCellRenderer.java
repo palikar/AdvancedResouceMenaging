@@ -27,7 +27,7 @@ import javax.swing.table.DefaultTableCellRenderer;
  *
  * @author Stanisalv
  */
-public class JTableLableRenderer extends DefaultTableCellRenderer {
+public class JLableCellRenderer extends DefaultTableCellRenderer {
 
     public void fillColor(JTable t, JLabel l, boolean isSelected) {
 

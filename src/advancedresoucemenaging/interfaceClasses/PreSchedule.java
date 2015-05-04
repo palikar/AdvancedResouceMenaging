@@ -21,8 +21,8 @@ import advancedresoucemenaging.GUIClasses.GUIElements;
 import advancedresoucemenaging.GUIClasses.GradientPanel;
 import advancedresoucemenaging.dataHandling.GlobalSpace;
 import advancedresoucemenaging.dataHandling.GlobalStrings;
-import advancedresoucemenaging.tableSTuff.CustomCellRenderer;
-import advancedresoucemenaging.tableSTuff.JTableLableRenderer;
+import advancedresoucemenaging.tableSTuff.SubjectCellRenderer;
+import advancedresoucemenaging.tableSTuff.JLableCellRenderer;
 import advancedresoucemenaging.tableSTuff.PrePlanTableModel;
 import advancedresoucemenaging.tableSTuff.TableControl;
 import java.awt.*;
@@ -103,12 +103,12 @@ public class PreSchedule extends GradientPanel implements MouseListener, ActionL
         table.getColumnModel().getColumn(4).setPreferredWidth(138);
         table.getColumnModel().getColumn(5).setPreferredWidth(138);
 
-        table.getColumnModel().getColumn(0).setCellRenderer(new JTableLableRenderer());
-        table.getColumnModel().getColumn(1).setCellRenderer(new CustomCellRenderer());
-        table.getColumnModel().getColumn(2).setCellRenderer(new CustomCellRenderer());
-        table.getColumnModel().getColumn(3).setCellRenderer(new CustomCellRenderer());
-        table.getColumnModel().getColumn(4).setCellRenderer(new CustomCellRenderer());
-        table.getColumnModel().getColumn(5).setCellRenderer(new CustomCellRenderer());
+        table.getColumnModel().getColumn(0).setCellRenderer(new JLableCellRenderer());
+        table.getColumnModel().getColumn(1).setCellRenderer(new SubjectCellRenderer());
+        table.getColumnModel().getColumn(2).setCellRenderer(new SubjectCellRenderer());
+        table.getColumnModel().getColumn(3).setCellRenderer(new SubjectCellRenderer());
+        table.getColumnModel().getColumn(4).setCellRenderer(new SubjectCellRenderer());
+        table.getColumnModel().getColumn(5).setCellRenderer(new SubjectCellRenderer());
 
         table.addMouseListener(this);
 

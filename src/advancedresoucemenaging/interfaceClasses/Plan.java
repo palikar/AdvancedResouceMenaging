@@ -22,10 +22,10 @@ import advancedresoucemenaging.GUIClasses.GradientPanel;
 import advancedresoucemenaging.dataHandling.GlobalSpace;
 import advancedresoucemenaging.dataHandling.GlobalStrings;
 import advancedresoucemenaging.dataLoading.SavingLoadingSystem;
-import advancedresoucemenaging.tableSTuff.CustomCellRenderer;
-import advancedresoucemenaging.tableSTuff.JTableLableRenderer;
+import advancedresoucemenaging.tableSTuff.SubjectCellRenderer;
+import advancedresoucemenaging.tableSTuff.JLableCellRenderer;
 import advancedresoucemenaging.tableSTuff.TableControl;
-import advancedresoucemenaging.tableSTuff.PlanTableModel;
+import advancedresoucemenaging.tableSTuff.StudentPlanTableModel;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -48,7 +48,7 @@ public class Plan extends GradientPanel
     JButton print, makePlan;
     JTable table;
     JScrollPane sp;
-    PlanTableModel model;
+    StudentPlanTableModel model;
 
     public Plan()
     {
@@ -134,7 +134,7 @@ public class Plan extends GradientPanel
         });
         add(makePlan, "wrap 0.5cm");
 
-        model = new PlanTableModel();
+        model = new StudentPlanTableModel();
         table = new JTable(model);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table.setRowSelectionAllowed(true);
@@ -149,9 +149,9 @@ public class Plan extends GradientPanel
         table.setGridColor(Colors.tableGridColor);
         table.setSelectionBackground(Colors.tableSelectionBackGround);
         table.getTableHeader().setForeground(Colors.tableHeaderColor);
-
+        
         table.setCellSelectionEnabled(true);
-
+        
         table.getColumnModel().getColumn(0).setPreferredWidth(45);
         table.getColumnModel().getColumn(1).setPreferredWidth(137);
         table.getColumnModel().getColumn(2).setPreferredWidth(138);
@@ -159,12 +159,12 @@ public class Plan extends GradientPanel
         table.getColumnModel().getColumn(4).setPreferredWidth(138);
         table.getColumnModel().getColumn(5).setPreferredWidth(138);
 
-        table.getColumnModel().getColumn(0).setCellRenderer(new JTableLableRenderer());
-        table.getColumnModel().getColumn(1).setCellRenderer(new CustomCellRenderer());
-        table.getColumnModel().getColumn(2).setCellRenderer(new CustomCellRenderer());
-        table.getColumnModel().getColumn(3).setCellRenderer(new CustomCellRenderer());
-        table.getColumnModel().getColumn(4).setCellRenderer(new CustomCellRenderer());
-        table.getColumnModel().getColumn(5).setCellRenderer(new CustomCellRenderer());
+        table.getColumnModel().getColumn(0).setCellRenderer(new JLableCellRenderer());
+        table.getColumnModel().getColumn(1).setCellRenderer(new SubjectCellRenderer());
+        table.getColumnModel().getColumn(2).setCellRenderer(new SubjectCellRenderer());
+        table.getColumnModel().getColumn(3).setCellRenderer(new SubjectCellRenderer());
+        table.getColumnModel().getColumn(4).setCellRenderer(new SubjectCellRenderer());
+        table.getColumnModel().getColumn(5).setCellRenderer(new SubjectCellRenderer());
 
         sp = new JScrollPane(table);
         sp.setPreferredSize(new Dimension(736, 456));

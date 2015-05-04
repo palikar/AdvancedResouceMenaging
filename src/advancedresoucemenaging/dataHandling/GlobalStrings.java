@@ -38,7 +38,7 @@ public class GlobalStrings
     public static String planForStudPanelString = "Програма за класове";
     public static String planForTeachPanelString = "Програма за учители";
     public static String prePlanPanelString = "Предварителна програма";
-    public static String propPanelString = "Свойства на класове";
+    public static String cleanupPanelString = "Грешки в разписанието";
     public static String fileString = "Файл";
     public static String saveString = "Запази";
     public static String saveAsString = "Запази като";
@@ -64,7 +64,7 @@ public class GlobalStrings
     public static String makeString = "Изготви";
     public static String clearAllString = "Изчисти всичко";
     public static String clearClassString = "Изчисти класа";
-    public static String propartiesSting = "Свойства:";
+    public static String simpleTablePlanSting = "Прорама:";
     public static String parametarsString = "Параметри:";
     public static String newPorpartyString = "Ново свойство";
     public static String errorSting = "Грешка";

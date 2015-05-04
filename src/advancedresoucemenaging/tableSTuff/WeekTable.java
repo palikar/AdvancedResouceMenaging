@@ -19,6 +19,7 @@ package advancedresoucemenaging.tableSTuff;
 import advancedresoucemenaging.GUIClasses.Colors;
 import advancedresoucemenaging.GUIClasses.GUIElements;
 import advancedresoucemenaging.conditionClasses.ConditionDescription;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
@@ -34,23 +35,26 @@ import javax.swing.table.DefaultTableCellRenderer;
  *
  * @author Stanisalv
  */
-public class WeekTable extends JTable {
+public class WeekTable extends JTable
+{
 
-    Object[][] daysEnebled = new Object[5][7];
-    ConditionDescription con;
+    Color[][] customSelection = new Color[5][7];
 
-    public WeekTable(ConditionDescription con) {
+    public WeekTable()
+    {
         super();
-        this.con = con;
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 7; j++) {
-                daysEnebled[i][j] = con.getDaysEnebled()[i][j];
+
+        for (int i = 0; i < 5; i++)
+        {
+            for (int j = 0; j < 7; j++)
+            {
+                customSelection[i][j] = Colors.weekTableDisabledColor;
             }
         }
 
         final int rowHeght = 30;
         final int colWidth = 50;
-        setModel(new TableModel(daysEnebled));
+        setModel(new TableModel(customSelection));
 
         setDefaultRenderer(Object.class, new ColorRenderer());
         setCellSelectionEnabled(false);
@@ -62,127 +66,146 @@ public class WeekTable extends JTable {
         getColumnModel().getColumn(4).setPreferredWidth(colWidth);
         setBorder(GUIElements.defaultBorder);
         setGridColor(Colors.tableGridColor);
-        addMouseListener(new MouseListener() {
+        addMouseListener(new MouseListener()
+        {
 
             @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON3) {
-                    changeValue(e.getX() / colWidth, e.getY() / rowHeght, 0);
-                } else {
-                    changeValue(e.getX() / colWidth, e.getY() / rowHeght, 1);
+            public void mouseClicked(MouseEvent e)
+            {
+                if (e.getButton() == MouseEvent.BUTTON3)
+                {
+                    changeValue(e.getX() / colWidth, e.getY() / rowHeght, Colors.weekTableDisabledColor);
+                } else
+                {
+                    changeValue(e.getX() / colWidth, e.getY() / rowHeght, Colors.weekTableEnabledColor);
                 }
             }
 
             @Override
-            public void mousePressed(MouseEvent e) {
+            public void mousePressed(MouseEvent e)
+            {
 
             }
 
             @Override
 
-            public void mouseReleased(MouseEvent e) {
+            public void mouseReleased(MouseEvent e)
+            {
             }
 
             @Override
-            public void mouseEntered(MouseEvent e) {
+            public void mouseEntered(MouseEvent e)
+            {
 
             }
 
             @Override
-            public void mouseExited(MouseEvent e) {
+            public void mouseExited(MouseEvent e)
+            {
             }
         });
-        addMouseMotionListener(new MouseMotionListener() {
+        addMouseMotionListener(new MouseMotionListener()
+        {
 
             @Override
-            public void mouseDragged(MouseEvent e) {
-                if (e.getModifiersEx() == MouseEvent.BUTTON3_DOWN_MASK) {
-                    changeValue(e.getX() / colWidth, e.getY() / rowHeght, 0);
-                } else {
-                    changeValue(e.getX() / colWidth, e.getY() / rowHeght, 1);
+            public void mouseDragged(MouseEvent e)
+            {
+                if (e.getModifiersEx() == MouseEvent.BUTTON3_DOWN_MASK)
+                {
+                    changeValue(e.getX() / colWidth, e.getY() / rowHeght, Colors.weekTableDisabledColor);
+                } else
+                {
+                    changeValue(e.getX() / colWidth, e.getY() / rowHeght, Colors.weekTableEnabledColor);
                 }
             }
 
             @Override
-            public void mouseMoved(MouseEvent e) {
+            public void mouseMoved(MouseEvent e)
+            {
             }
         });
         setPreferredSize(new Dimension(colWidth * getColumnCount(), rowHeght * getRowCount()));
 
     }
 
-    public void changeValue(int day, int hour, int value) {
-        if (day >= 5 || hour >= 7 || day < 0 || hour < 0) {
+    public void changeValue(int day, int hour, Color value)
+    {
+        if (day >= 5 || hour >= 7 || day < 0 || hour < 0)
+        {
             return;
         }
 
-        daysEnebled[day][hour] = value;
-        con.getDaysEnebled()[day][hour] = value;
+        customSelection[day][hour] = value;
+
         tableChanged(new TableModelEvent(getModel(), hour));
     }
 
-    public void setWeek(int week[][]) {
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 7; j++) {
-                daysEnebled[i][j] = week[i][j];
-            }
-        }
-    }
 }
 
-class ColorRenderer extends DefaultTableCellRenderer {
+class ColorRenderer extends DefaultTableCellRenderer
+{
 
     @Override
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        return new JPanel() {
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
+    {
+        return new JPanel()
+        {
             {
-                if (value.equals(0)) {
-                    setBackground(Colors.weekTableDisabledColor);
-                } else {
-                    setBackground(Colors.weekTableEnabledColor);
+                if (value instanceof Color)
+                {
+                    setBackground((Color) value);
                 }
             }
         };
     }
 }
 
-class TableModel extends AbstractTableModel {
+class TableModel extends AbstractTableModel
+{
 
     Object[][] daysEnebled;
-    private String[] COLUMN_NAMES = new String[]{
+    private String[] COLUMN_NAMES = new String[]
+    {
         "",
         "Пон.",
         "Вт.",
         "Ср.",
         "Ч.к",
-        "П."};
+        "П."
+    };
 
-    public TableModel(Object[][] daysEnebled) {
+    public TableModel(Object[][] daysEnebled)
+    {
         this.daysEnebled = daysEnebled;
     }
 
     @Override
-    public int getRowCount() {
+    public int getRowCount()
+    {
         return 7;
     }
 
     @Override
-    public int getColumnCount() {
+    public int getColumnCount()
+    {
         return 5;
     }
 
     @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
+    public Object getValueAt(int rowIndex, int columnIndex)
+    {
         return daysEnebled[columnIndex][rowIndex];
     }
 
     @Override
-    public String getColumnName(int column) {
+    public String getColumnName(int column)
+    {
         return COLUMN_NAMES[column];
     }
 
     @Override
-    public boolean isCellEditable(int rowIndex, int columnIndex) {
+    public boolean isCellEditable(int rowIndex, int columnIndex)
+    {
         return false;
     }
 

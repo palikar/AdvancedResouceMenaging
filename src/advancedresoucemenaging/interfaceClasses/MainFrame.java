@@ -97,7 +97,7 @@ public class MainFrame extends JFrame implements ActionListener
         tabs.add(new StudentScheduleTab(), GlobalStrings.planForStudPanelString);
         tabs.add(new TeacherScheduleTab(), GlobalStrings.planForTeachPanelString);
         tabs.add(new PreScheduleTab(), GlobalStrings.prePlanPanelString);
-        //tabs.add(new ClassesConditionsTab(), GlobalStrings.propPanelString);
+        tabs.add(new CleanupToolTab(), GlobalStrings.cleanupPanelString);
 
         //Tabs hot keys
         tabs.setMnemonicAt(0, KeyEvent.VK_M);
@@ -106,7 +106,7 @@ public class MainFrame extends JFrame implements ActionListener
         tabs.setMnemonicAt(3, KeyEvent.VK_S);
         tabs.setMnemonicAt(4, KeyEvent.VK_T);
         tabs.setMnemonicAt(5, KeyEvent.VK_S);
-        // tabs.setMnemonicAt(6, KeyEvent.VK_P);
+         tabs.setMnemonicAt(6, KeyEvent.VK_P);
 
         setupTabTraversalKeys(tabs);//Tabs rottation
 
@@ -335,7 +335,7 @@ public class MainFrame extends JFrame implements ActionListener
                 ((PreScheduleTab) tabs.getSelectedComponent()).refresh();
                 break;
             case 6:
-                ((ClassesConditionsTab) tabs.getSelectedComponent()).refresh();
+                ((CleanupToolTab) tabs.getSelectedComponent()).refresh();
                 break;
         }
     }

@@ -55,17 +55,12 @@ public class PreScheduleTab extends GradientPanel implements MouseListener, Acti
 
         classes = GUIElements.getComboField();
         classes.setPreferredSize(new Dimension(125, 35));
-        classes.addActionListener(new ActionListener()
+        classes.addActionListener(event ->
         {
-
-            @Override
-            public void actionPerformed(ActionEvent e)
+            if (classes.getSelectedIndex() != -1)
             {
-                if (classes.getSelectedIndex() != -1)
-                {
-                    TableControl.selectedClass = classes.getSelectedItem().toString();
-                    model.fireTableDataChanged();
-                }
+                TableControl.selectedClass = classes.getSelectedItem().toString();
+                model.fireTableDataChanged();
             }
         });
         add(classes, "gaptop 0.5cm");

@@ -87,7 +87,7 @@ public class ConditionUI {
         JPanel tablePanle = new JPanel();
         tablePanle.setLayout(new FlowLayout(FlowLayout.CENTER));
         tablePanle.setOpaque(false);
-        tablePanle.add(new WeekTable(desc));
+        tablePanle.add(new WeekTable());
         rootPanel.add(tablePanle);
 
         rootPanel.validate();

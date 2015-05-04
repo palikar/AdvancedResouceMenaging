@@ -30,8 +30,6 @@ public class AdvancedResouceMenaging
     {
         SwingUtilities.invokeLater(() ->
         {
-
-            //  MainFrame mainFrame = new MainFrame();
             MainFrame mainFrame = new MainFrame();
         });
 

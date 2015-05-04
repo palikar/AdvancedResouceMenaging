@@ -26,11 +26,9 @@ import javax.swing.table.AbstractTableModel;
  *
  * @author Stanisalv
  */
-public class TeacherPlanModel extends AbstractTableModel
-{
+public class TeacherPlanModel extends AbstractTableModel {
 
-    private final String[] COLUMN_NAMES = new String[]
-    {
+    private final String[] COLUMN_NAMES = new String[]{
         GlobalStrings.hourSting,
         GlobalStrings.mondayString,
         GlobalStrings.tuesdaySting,
@@ -40,42 +38,34 @@ public class TeacherPlanModel extends AbstractTableModel
     };
 
     @Override
-    public Class<?> getColumnClass(int columnIndex)
-    {
+    public Class<?> getColumnClass(int columnIndex) {
         return Object.class;
     }
 
     @Override
-    public String getColumnName(int column)
-    {
+    public String getColumnName(int column) {
         return COLUMN_NAMES[column];
     }
 
     @Override
-    public boolean isCellEditable(int rowIndex, int columnIndex)
-    {
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
         return false;
     }
 
     @Override
-    public int getRowCount()
-    {
+    public int getRowCount() {
         return 7;
     }
 
     @Override
-    public int getColumnCount()
-    {
+    public int getColumnCount() {
         return COLUMN_NAMES.length;
     }
 
     @Override
-    public Object getValueAt(int rowIndex, int columnIndex)
-    {
-        if (columnIndex == 0)
-        {
-            switch (rowIndex)
-            {
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        if (columnIndex == 0) {
+            switch (rowIndex) {
                 case 0:
                     return new JLabel("I");
                 case 1:
@@ -91,10 +81,8 @@ public class TeacherPlanModel extends AbstractTableModel
                 case 6:
                     return new JLabel("VII");
             }
-        } else
-        {
-            if (!TableControl.selectedTeacher.equals(""))
-            {
+        } else {
+            if (!TableControl.selectedTeacher.equals("")) {
                 return new JLabel(getTeacher(rowIndex, columnIndex));
 
             }
@@ -102,13 +90,11 @@ public class TeacherPlanModel extends AbstractTableModel
         return "";
     }
 
-    private String getTeacher(int rowIndex, int columnIndex)
-    {
+    private String getTeacher(int rowIndex, int columnIndex) {
 
-        for (Entry<String, advancedresoucemenaging.dataHandling.Class> clas : GlobalSpace.classController.classes.entrySet())
-        {
-            if (clas.getValue().schedule[columnIndex - 1][rowIndex].getTeacher().equals(TableControl.selectedTeacher))
-            {
+        for (Entry<String, advancedresoucemenaging.dataHandling.Class> clas
+                : GlobalSpace.classController.getClasses().entrySet()) {
+            if (clas.getValue().getSchedule()[columnIndex - 1][rowIndex].getTeacher().equals(TableControl.selectedTeacher)) {
                 return clas.getKey();
             }
         }

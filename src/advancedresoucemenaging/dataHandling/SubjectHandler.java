@@ -24,36 +24,41 @@ import java.util.Map;
  *
  * @author Stanisalv
  */
-public class SubjectHandler extends Handler
-{
+public class SubjectHandler implements Handler {
 
-    public Map<String, Subject> subjectsMap;
-    public ArrayList<Subject> subjects;
+    private Map<String, Subject> subjectsMap;
+    private ArrayList<Subject> subjects;
 
-    public SubjectHandler()
-    {
+    public SubjectHandler() {
         subjectsMap = new HashMap<>();
         subjects = new ArrayList<>();
     }
 
     @Override
-    public void add(String name)
-    {
+    public void add(String name) {
         Subject newSub = new Subject(name);
         subjects.add(newSub);
         subjectsMap.put(name, newSub);
     }
 
     @Override
-    public void remove(String name)
-    {
+    public void remove(String name) {
         subjects.remove(subjectsMap.get(name));
         subjectsMap.remove(name);
     }
 
     @Override
-    public boolean contains(String name)
-    {
+    public boolean contains(String name) {
         return subjectsMap.containsKey(name);
     }
+
+    public Map<String, Subject> getSubjectsMap() {
+        return subjectsMap;
+    }
+
+    public ArrayList<Subject> getSubjects() {
+        return subjects;
+    }
+    
+    
 }

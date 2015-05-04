@@ -19,29 +19,35 @@ package advancedresoucemenaging.dataHandling;
 import java.util.ArrayList;
 
 /**
-
- @author Stanisalv
+ *
+ * @author Stanisalv
  */
-public class TeacherHandler extends Handler {
+public class TeacherHandler implements Handler {
 
-    public ArrayList<String> teachers;
+    private ArrayList<String> teachers;
 
     public TeacherHandler() {
-	teachers = new ArrayList<>();
+        teachers = new ArrayList<>();
     }
 
     @Override
     public void add(String name) {
-	teachers.add(name);
+        teachers.add(name);
     }
 
     @Override
     public void remove(String name) {
-	teachers.remove(name);
+        teachers.remove(name);
     }
 
     @Override
     public boolean contains(String name) {
-	return teachers.contains(name);
+        return teachers.contains(name);
     }
+
+    public ArrayList<String> getTeachers() {
+        return teachers;
+    }
+    
+    
 }

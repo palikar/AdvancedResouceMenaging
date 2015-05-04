@@ -41,8 +41,7 @@ import net.miginfocom.swing.MigLayout;
  *
  * @author Stanisalv
  */
-public class StudentScheduleTab extends GradientPanel
-{
+public class StudentScheduleTab extends GradientPanel {
 
     JComboBox<Object> classes;
     JButton print, makePlan;
@@ -50,8 +49,7 @@ public class StudentScheduleTab extends GradientPanel
     JScrollPane sp;
     StudentPlanTableModel model;
 
-    public StudentScheduleTab()
-    {
+    public StudentScheduleTab() {
         super(new MigLayout());
 
         JLabel classL = new JLabel(GlobalStrings.classString);
@@ -59,10 +57,8 @@ public class StudentScheduleTab extends GradientPanel
 
         classes = GUIElements.getComboField();
         classes.setPreferredSize(new Dimension(125, 35));
-        classes.addActionListener((event) ->
-        {
-            if (classes.getSelectedIndex() != -1)
-            {
+        classes.addActionListener((event) -> {
+            if (classes.getSelectedIndex() != -1) {
                 TableControl.selectedClass = classes.getSelectedItem().toString();
                 model.fireTableDataChanged();
             }
@@ -71,21 +67,17 @@ public class StudentScheduleTab extends GradientPanel
 
         print = GUIElements.getButton(GlobalStrings.saveToPdfString);
         print.setBounds(225, 25, 150, 35);
-        print.addActionListener((e) ->
-        {
+        print.addActionListener((e) -> {
             JFileChooser chooser = new JFileChooser();
             chooser.setFont(new Font("SansSerif", Font.ITALIC | Font.BOLD, 10));
             chooser.setSelectedFile(new File("School_Schadule_" + System.currentTimeMillis() / 1000 + ".pdf"));
 
-            if (chooser.showSaveDialog(this) == chooser.APPROVE_OPTION)
-            {
+            if (chooser.showSaveDialog(this) == chooser.APPROVE_OPTION) {
 
-                try
-                {
+                try {
                     SavingLoadingSystem.saveClassesScheduleToPdf(
                             new File(chooser.getSelectedFile().getCanonicalPath() + ".pdf"));
-                } catch (IOException ex)
-                {
+                } catch (IOException ex) {
                     Logger.getLogger(StudentScheduleTab.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -94,14 +86,11 @@ public class StudentScheduleTab extends GradientPanel
 
         makePlan = GUIElements.getButton(GlobalStrings.makeString);
         makePlan.setBounds(385, 25, 125, 35);
-        makePlan.addActionListener((ActionEvent event) ->
-        {
-            new Thread(new Runnable()
-            {
+        makePlan.addActionListener((ActionEvent event) -> {
+            new Thread(new Runnable() {
 
                 @Override
-                public void run()
-                {
+                public void run() {
                     GlobalSpace.setUpController();
                     GlobalSpace.makePlan();
                     model.fireTableDataChanged();
@@ -109,22 +98,17 @@ public class StudentScheduleTab extends GradientPanel
 
                 }
             }).start();
-            new Thread(new Runnable()
-            {
+            new Thread(new Runnable() {
 
                 @Override
-                public void run()
-                {
-                    while (!GlobalSpace.ready)
-                    {
-                        try
-                        {
+                public void run() {
+                    while (!GlobalSpace.ready) {
+                        try {
                             GlobalSpace.updateClassController();
                             model.fireTableDataChanged();
                             table.repaint();
                             Thread.sleep(50);
-                        } catch (InterruptedException ex)
-                        {
+                        } catch (InterruptedException ex) {
                             Logger.getLogger(StudentScheduleTab.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
@@ -149,9 +133,9 @@ public class StudentScheduleTab extends GradientPanel
         table.setGridColor(Colors.tableGridColor);
         table.setSelectionBackground(Colors.tableSelectionBackGround);
         table.getTableHeader().setForeground(Colors.tableHeaderColor);
-        
+
         table.setCellSelectionEnabled(true);
-        
+
         table.getColumnModel().getColumn(0).setPreferredWidth(45);
         table.getColumnModel().getColumn(1).setPreferredWidth(137);
         table.getColumnModel().getColumn(2).setPreferredWidth(138);
@@ -171,12 +155,10 @@ public class StudentScheduleTab extends GradientPanel
         add(sp, "gapleft 0.5cm");
     }
 
-    public void refresh()
-    {
+    public void refresh() {
         classes.removeAllItems();
-        for (advancedresoucemenaging.dataHandling.Class clas : GlobalSpace.classController.classes.values())
-        {
-            classes.addItem(clas.name);
+        for (advancedresoucemenaging.dataHandling.Class clas : GlobalSpace.classController.getClasses().values()) {
+            classes.addItem(clas.getName());
         }
     }
 }

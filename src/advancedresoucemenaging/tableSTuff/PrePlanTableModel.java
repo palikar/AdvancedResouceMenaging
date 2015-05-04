@@ -99,7 +99,7 @@ public class PrePlanTableModel extends AbstractTableModel
         {
             if (!TableControl.selectedClass.equals(""))
             {
-                return GlobalSpace.classController.classes.get(TableControl.selectedClass).schedule[columnIndex - 1][rowIndex];
+                return GlobalSpace.classController.getClasses().get(TableControl.selectedClass).getSchedule()[columnIndex - 1][rowIndex];
             }
         }
         return new SubjectPlaceHolder();

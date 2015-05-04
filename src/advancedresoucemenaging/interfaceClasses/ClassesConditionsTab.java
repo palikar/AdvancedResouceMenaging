@@ -43,8 +43,7 @@ import net.miginfocom.swing.MigLayout;
  *
  * @author Stanisalv
  */
-public class Proparties extends GradientPanel implements ListSelectionListener, ActionListener
-{
+public class ClassesConditionsTab extends GradientPanel implements ListSelectionListener, ActionListener {
 
     DefaultListModel<Object> classesModel, propartiesModel;
     JList<Object> classes, proparties;
@@ -55,8 +54,7 @@ public class Proparties extends GradientPanel implements ListSelectionListener, 
     ConditionDescription currentDesc = emptyDesc;
     ArrayList<Boolean> allClasses;
 
-    public Proparties()
-    {
+    public ClassesConditionsTab() {
         super(new MigLayout());
 
         add(new JLabel(GlobalStrings.classesString), "gaptop 0.5cm, gapleft 0.5cm, span 2");
@@ -89,59 +87,48 @@ public class Proparties extends GradientPanel implements ListSelectionListener, 
         add(remove, "center");
     }
 
-    void refresh()
-    {
+    void refresh() {
         classesModel.clear();
-        for (int i = 0; i < GlobalSpace.classController.classes.size(); i++)
-        {
-            classesModel.addElement(GlobalSpace.classController.classes.get(i));
+        for (int i = 0; i < GlobalSpace.classController.getClasses().size(); i++) {
+            classesModel.addElement(GlobalSpace.classController.getClasses().get(i));
         }
         refreshConditionUI();
     }
 
-    void refreshPorparties()
-    {
+    void refreshPorparties() {
         propartiesModel.clear();
-        if (classes.getSelectedIndex() == -1)
-        {
+        if (classes.getSelectedIndex() == -1) {
             return;
         }
-        for (ConditionDescription c : GlobalSpace.classController.classes.get(classes.getSelectedValue()).conditions)
-        {
+        for (ConditionDescription c
+                : GlobalSpace.classController.getClasses().get(classes.getSelectedValue()).getConditions()) {
             propartiesModel.addElement(ConditionCodeList.getName(c.getCode()));
         }
     }
 
     @Override
-    public void valueChanged(ListSelectionEvent e)
-    {
-        if (e.getSource().equals(classes))
-        {
+    public void valueChanged(ListSelectionEvent e) {
+        if (e.getSource().equals(classes)) {
             propartiesModel.clear();
-            if (classes.getSelectedIndex() != -1)
-            {
-                for (ConditionDescription desc : GlobalSpace.classController.classes.get(classes.getSelectedValue()).conditions)
-                {
+            if (classes.getSelectedIndex() != -1) {
+                for (ConditionDescription desc
+                        : GlobalSpace.classController.getClasses().get(classes.getSelectedValue()).getConditions()) {
                     propartiesModel.addElement(ConditionCodeList.getName(desc.getCode()));
                 }
             }
             currentDesc = emptyDesc;
             refreshConditionUI();
-        } else if (e.getSource().equals(proparties))
-        {
-            if (classes.getSelectedIndex() == -1 || proparties.getSelectedIndex() == -1)
-            {
+        } else if (e.getSource().equals(proparties)) {
+            if (classes.getSelectedIndex() == -1 || proparties.getSelectedIndex() == -1) {
                 currentDesc = emptyDesc;
-            } else
-            {
-                currentDesc = GlobalSpace.classController.classes.get(classes.getSelectedValue()).conditions.get(proparties.getSelectedIndex());
+            } else {
+                currentDesc = GlobalSpace.classController.getClasses().get(classes.getSelectedValue()).getConditions().get(proparties.getSelectedIndex());
             }
             refreshConditionUI();
         }
     }
 
-    private void refreshConditionUI()
-    {
+    private void refreshConditionUI() {
         remove(params);
         params = currentDesc.refreshUI();
         add(params, "cell 3 1,span 1 3,wrap 0.25cm");
@@ -150,48 +137,40 @@ public class Proparties extends GradientPanel implements ListSelectionListener, 
     }
 
     @Override
-    public void actionPerformed(ActionEvent e)
-    {
-        if (e.getSource().equals(add))
-        {
-            JComboBox<Object> type = new JComboBox<Object>()
-            {
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource().equals(add)) {
+            JComboBox<Object> type = new JComboBox<Object>() {
                 {
-                    for (int code : ConditionCodeList.codes)
-                    {
+                    for (int code : ConditionCodeList.codes) {
                         addItem(ConditionCodeList.getName(code));
                     }
                 }
             };
-            Object input[] =
-            {
-                new JLabel(GlobalStrings.typeString), type
-            };
-            if (classes.getSelectedIndex() == -1)
-            {
+            Object input[]
+                    = {
+                        new JLabel(GlobalStrings.typeString), type
+                    };
+            if (classes.getSelectedIndex() == -1) {
                 JOptionPane.showMessageDialog(this, GlobalStrings.noSelectedClass, GlobalStrings.errorSting, JOptionPane.WARNING_MESSAGE);
                 return;
 
             }
-            if (JOptionPane.showConfirmDialog(this, input, GlobalStrings.newPorpartyString, JOptionPane.OK_CANCEL_OPTION) == JOptionPane.CANCEL_OPTION)
-            {
+            if (JOptionPane.showConfirmDialog(this, input, GlobalStrings.newPorpartyString, JOptionPane.OK_CANCEL_OPTION) == JOptionPane.CANCEL_OPTION) {
                 return;
             }
             ConditionDescription newDesc = new ConditionDescription(classes.getSelectedValue().toString());
             newDesc.setCode(type.getSelectedIndex() + 1);
-            GlobalSpace.classController.classes.get(classes.getSelectedValue()).conditions.add(newDesc);
+            GlobalSpace.classController.getClasses().get(classes.getSelectedValue()).getConditions().add(newDesc);
             propartiesModel.addElement(ConditionCodeList.getName(newDesc.getCode()));
             proparties.setSelectedIndex(propartiesModel.getSize() - 1);
             currentDesc = newDesc;
             refreshConditionUI();
 
-        } else if (e.getSource().equals(remove))
-        {
-            if (proparties.getSelectedIndex() == -1 || classes.getSelectedIndex() == -1)
-            {
+        } else if (e.getSource().equals(remove)) {
+            if (proparties.getSelectedIndex() == -1 || classes.getSelectedIndex() == -1) {
                 return;
             }
-            GlobalSpace.classController.classes.get(classes.getSelectedValue()).conditions.remove(proparties.getSelectedIndex());
+            GlobalSpace.classController.getClasses().get(classes.getSelectedValue()).getConditions().remove(proparties.getSelectedIndex());
             refreshPorparties();
         }
     }

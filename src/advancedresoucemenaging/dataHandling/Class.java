@@ -26,17 +26,15 @@ import java.util.Map;
  *
  * @author Sammy Guergachi <sguergachi at gmail.com>
  */
-public class Class
-{
+public class Class {
 
-    public ArrayList<SubjectPlaceHolder> subjects;
-    public Map<SubjectPlaceHolder, Integer> subjectPlan;
-    public ArrayList<ConditionDescription> conditions;
-    public SubjectPlaceHolder[][] schedule;
-    public String name;
+    private ArrayList<SubjectPlaceHolder> subjects;
+    private Map<SubjectPlaceHolder, Integer> subjectPlan;
+    private ArrayList<ConditionDescription> conditions;
+    private SubjectPlaceHolder[][] schedule;
+    private String name;
 
-    public Class(String name)
-    {
+    public Class(String name) {
         this.name = name;
         subjectPlan = new HashMap<>();
         subjects = new ArrayList<>();
@@ -45,21 +43,37 @@ public class Class
         clearSchedule();
     }
 
-    void clearSchedule()
-    {
-        for (int i = 0; i < 5; i++)
-        {
-            for (int j = 0; j < 7; j++)
-            {
+    void clearSchedule() {
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 7; j++) {
                 schedule[i][j] = new SubjectPlaceHolder();
             }
         }
     }
 
-    void addSubject(SubjectPlaceHolder sub, int times)
-    {
+    void addSubject(SubjectPlaceHolder sub, int times) {
         subjectPlan.put(sub, times);
         subjects.add(sub);
+    }
+
+    public ArrayList<SubjectPlaceHolder> getSubjects() {
+        return subjects;
+    }
+
+    public Map<SubjectPlaceHolder, Integer> getSubjectPlan() {
+        return subjectPlan;
+    }
+
+    public ArrayList<ConditionDescription> getConditions() {
+        return conditions;
+    }
+
+    public SubjectPlaceHolder[][] getSchedule() {
+        return schedule;
+    }
+
+    public String getName() {
+        return name;
     }
 
 }

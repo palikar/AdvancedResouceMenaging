@@ -16,7 +16,7 @@
  */
 package advancedresoucemenaging.algStuff;
 
-import advancedresoucemenaging.dataHandling.Settings;
+import advancedresoucemenaging.dataHandling.GlobalSettings;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ListIterator;
@@ -36,7 +36,7 @@ public final class Controller
     {
         classes = new ArrayList<>();
         state = new ArrayList<>();
-        shuffling = Settings.shuffling;
+        shuffling = GlobalSettings.shuffling;
     }
 
     boolean allReady()
@@ -213,13 +213,13 @@ public final class Controller
                 for (int k = 0; k < 5; k++)
                 {
                     state.add(classes.get(i).days.get(k).hours.get(j));
-                    if (Settings.hardnesSort)
+                    if (GlobalSettings.hardnesSort)
                     {
                         classes.get(i).days.get(k).hours.get(j).sortByHardness();
                     }
-                    if (Settings.shuffling)
+                    if (GlobalSettings.shuffling)
                     {
-                        classes.get(i).days.get(k).hours.get(j).shuffelDomain(Settings.hardnesSort);
+                        classes.get(i).days.get(k).hours.get(j).shuffelDomain(GlobalSettings.hardnesSort);
                     }
                 }
             }

@@ -184,9 +184,9 @@ public class MainTab extends GradientPanel implements ActionListener, ListSelect
     public void refresh() {
         school.setText(GlobalSpace.school);
         diretor.setText(GlobalSpace.principle);
-        classesL.setText(GlobalStrings.classesString + GlobalSpace.classController.classes.size());
-        teacherL.setText(GlobalStrings.teachersString + GlobalSpace.teacherController.teachers.size());
-        subsL.setText(GlobalStrings.subjectsString + GlobalSpace.subjectController.subjects.size());
+        classesL.setText(GlobalStrings.classesString + GlobalSpace.classController.getClasses().size());
+        teacherL.setText(GlobalStrings.teachersString + GlobalSpace.teacherController.getTeachers().size());
+        subsL.setText(GlobalStrings.subjectsString + GlobalSpace.subjectController.getSubjects().size());
         Iterator<Object> paramKeys = GlobalSpace.params.keySet().iterator();
         paramsModel.clear();
         while (paramKeys.hasNext()) {

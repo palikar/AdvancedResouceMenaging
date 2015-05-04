@@ -77,9 +77,9 @@ public class GlobalSpace
         algControll = new Controller();
 
         Map<String, ArrayList<Class>> classMap = new HashMap<>();
-        classController.classes.values().forEach((Class clas) ->
+        classController.getClasses().values().forEach((Class clas) ->
         {
-            String name = clas.name;
+            String name = clas.getName();
             String grade = null;
             if (name.length() == 2)
             {
@@ -106,7 +106,7 @@ public class GlobalSpace
             algControll.make();
         });
         updateClassController();
-        mistakeFixer.fixMistakes(classController.classes);
+        mistakeFixer.fixMistakes(classController.getClasses());
         ready = true;
 
     }

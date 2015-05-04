@@ -121,9 +121,9 @@ public class PreScheduleTab extends GradientPanel implements MouseListener, Acti
     public void refresh()
     {
         classes.removeAllItems();
-        for (advancedresoucemenaging.dataHandling.Class clas : GlobalSpace.classController.classes.values())
+        for (advancedresoucemenaging.dataHandling.Class clas : GlobalSpace.classController.getClasses().values())
         {
-            classes.addItem(clas.name);
+            classes.addItem(clas.getName());
         }
     }
     JFrame ob = null;
@@ -135,7 +135,7 @@ public class PreScheduleTab extends GradientPanel implements MouseListener, Acti
             return;
         }
 
-        ob = new SetSubjectFrame(GlobalSpace.classController.classes.get(TableControl.selectedClass).subjectPlan.keySet().toArray(),
+        ob = new SetSubjectFrame(GlobalSpace.classController.getClasses().get(TableControl.selectedClass).getSubjectPlan().keySet().toArray(),
                 col,
                 row,
                 TableControl.selectedClass)

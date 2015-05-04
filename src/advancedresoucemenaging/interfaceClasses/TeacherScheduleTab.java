@@ -127,9 +127,9 @@ public class TeacherScheduleTab extends GradientPanel
     public void refresh()
     {
         teachers.removeAllItems();
-        for (int i = 0; i < GlobalSpace.teacherController.teachers.size(); i++)
+        for (int i = 0; i < GlobalSpace.teacherController.getTeachers().size(); i++)
         {
-            teachers.addItem(GlobalSpace.teacherController.teachers.get(i));
+            teachers.addItem(GlobalSpace.teacherController.getTeachers().get(i));
         }
     }
 }

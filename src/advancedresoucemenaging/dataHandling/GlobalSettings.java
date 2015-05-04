@@ -20,7 +20,7 @@ package advancedresoucemenaging.dataHandling;
  *
  * @author Stanisalv
  */
-public class Settings
+public class GlobalSettings
 {
 
     public static boolean shuffling = false;

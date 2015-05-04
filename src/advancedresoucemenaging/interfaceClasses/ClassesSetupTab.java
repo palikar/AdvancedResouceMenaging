@@ -38,8 +38,7 @@ import net.miginfocom.swing.MigLayout;
  *
  * @author Stanisalv
  */
-public class ClassesSetupTab extends GradientPanel implements ActionListener, ListSelectionListener
-{
+public class ClassesSetupTab extends GradientPanel implements ActionListener, ListSelectionListener {
 
     DefaultListModel<Object> classesModel;
     DefaultListModel<SubjectPlaceHolder> subjectsModel;
@@ -52,8 +51,7 @@ public class ClassesSetupTab extends GradientPanel implements ActionListener, Li
     Map<SubjectPlaceHolder, Integer> currentMap;
     JLabel timesL;
 
-    public ClassesSetupTab()
-    {
+    public ClassesSetupTab() {
         super(new MigLayout());
 
         JLabel clasL = new JLabel(GlobalStrings.classesString);
@@ -71,26 +69,21 @@ public class ClassesSetupTab extends GradientPanel implements ActionListener, Li
 
         subjectsModel = new DefaultListModel<>();
         subjects = new JList<SubjectPlaceHolder>(subjectsModel);
-        subjects.setCellRenderer(new ListCellRenderer<Object>()
-        {
+        subjects.setCellRenderer(new ListCellRenderer<Object>() {
 
             @Override
-            public Component getListCellRendererComponent(JList<? extends Object> list, Object value, int index, boolean isSelected, boolean cellHasFocus)
-            {
-                if (value instanceof SubjectPlaceHolder)
-                {
+            public Component getListCellRendererComponent(JList<? extends Object> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                if (value instanceof SubjectPlaceHolder) {
                     JLabel lable;
                     SubjectPlaceHolder sub = (SubjectPlaceHolder) value;
                     lable = new JLabel();
                     lable.setText("<html><strong>" + sub.getSubject() + "</strong><br>" + sub.getTeacher() + "</html>");
                     lable.setFont(new Font("SansSerif", Font.PLAIN, 15));
                     lable.setOpaque(true);
-                    if (isSelected)
-                    {
+                    if (isSelected) {
                         lable.setBackground(subjects.getSelectionBackground());
                         lable.setForeground(subjects.getSelectionForeground());
-                    } else
-                    {
+                    } else {
                         lable.setBackground(subjects.getBackground());
                         lable.setForeground(subjects.getForeground());
 
@@ -113,43 +106,36 @@ public class ClassesSetupTab extends GradientPanel implements ActionListener, Li
 
         times = GUIElements.getTextField();
         times.setPreferredSize(new Dimension(50, 25));
-        times.getDocument().addDocumentListener(new DocumentListener()
-        {
+        times.getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
-            public void insertUpdate(DocumentEvent e)
-            {
-                if (subjects.getSelectedIndex() != -1 && !times.getText().replace(" ", "").equals(""))
-                {
+            public void insertUpdate(DocumentEvent e) {
+                if (subjects.getSelectedIndex() != -1 && !times.getText().replace(" ", "").equals("")) {
 
                     int newTimes = Integer.parseInt(times.getText());
                     SubjectPlaceHolder sub = subjectsModel.get(subjects.getSelectedIndex());
-                    GlobalSpace.classController.classes.get(classes.getSelectedValue().toString()).subjectPlan.put(sub, newTimes);
+                    GlobalSpace.classController.getClasses().get(classes.getSelectedValue().toString()).getSubjectPlan().put(sub, newTimes);
                 }
             }
 
             @Override
-            public void removeUpdate(DocumentEvent e)
-            {
-                if (subjects.getSelectedIndex() != -1 && !times.getText().replace(" ", "").equals(""))
-                {
+            public void removeUpdate(DocumentEvent e) {
+                if (subjects.getSelectedIndex() != -1 && !times.getText().replace(" ", "").equals("")) {
 
                     int newTimes = Integer.parseInt(times.getText());
                     SubjectPlaceHolder sub = subjectsModel.get(subjects.getSelectedIndex());
-                    GlobalSpace.classController.classes.get(classes.getSelectedValue().toString()).subjectPlan.put(sub, newTimes);
+                    GlobalSpace.classController.getClasses().get(classes.getSelectedValue().toString()).getSubjectPlan().put(sub, newTimes);
                 }
             }
 
             @Override
-            public void changedUpdate(DocumentEvent e)
-            {
+            public void changedUpdate(DocumentEvent e) {
 
-                if (subjects.getSelectedIndex() != -1 && !times.getText().replace(" ", "").equals(""))
-                {
+                if (subjects.getSelectedIndex() != -1 && !times.getText().replace(" ", "").equals("")) {
 
                     int newTimes = Integer.parseInt(times.getText());
                     SubjectPlaceHolder sub = subjectsModel.get(subjects.getSelectedIndex());
-                    GlobalSpace.classController.classes.get(classes.getSelectedValue().toString()).subjectPlan.put(sub, newTimes);
+                    GlobalSpace.classController.getClasses().get(classes.getSelectedValue().toString()).getSubjectPlan().put(sub, newTimes);
                 }
 
             }
@@ -193,82 +179,65 @@ public class ClassesSetupTab extends GradientPanel implements ActionListener, Li
     }
 
     @Override
-    protected void paintComponent(Graphics g)
-    {
+    protected void paintComponent(Graphics g) {
         super.paintComponent(g);
     }
 
-    void refresh()
-    {
+    void refresh() {
         classesModel.clear();
-        for (advancedresoucemenaging.dataHandling.Class clas : GlobalSpace.classController.classes.values())
-        {
-            classesModel.addElement(clas.name);
+        for (advancedresoucemenaging.dataHandling.Class clas : GlobalSpace.classController.getClasses().values()) {
+            classesModel.addElement(clas.getName());
         }
         subs.removeAllItems();
-        for (int i = 0; i < GlobalSpace.subjectController.subjects.size(); i++)
-        {
-            Subject object = GlobalSpace.subjectController.subjects.get(i);
+        for (int i = 0; i < GlobalSpace.subjectController.getSubjects().size(); i++) {
+            Subject object = GlobalSpace.subjectController.getSubjects().get(i);
             subs.addItem(object.getName());
         }
         teachers.removeAllItems();
-        for (int i = 0; i < GlobalSpace.teacherController.teachers.size(); i++)
-        {
-            String object = GlobalSpace.teacherController.teachers.get(i);
+        for (int i = 0; i < GlobalSpace.teacherController.getTeachers().size(); i++) {
+            String object = GlobalSpace.teacherController.getTeachers().get(i);
             teachers.addItem(object);
         }
     }
 
     @Override
-    public void actionPerformed(ActionEvent e)
-    {
-        if (e.getSource().equals(add) || e.getSource().equals(timesPerWeek))
-        {
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource().equals(add) || e.getSource().equals(timesPerWeek)) {
             if (classes.getSelectedIndex() != -1
                     && teachers.getSelectedIndex() != -1
-                    && subs.getSelectedIndex() != -1)
-            {
+                    && subs.getSelectedIndex() != -1) {
                 SubjectPlaceHolder sub = new SubjectPlaceHolder(subs.getSelectedItem().toString(), teachers.getSelectedItem().toString());
                 int timesPerWeekInt = Integer.parseInt(timesPerWeek.getText().replaceAll(" ", ""));
-                GlobalSpace.classController.classes.get(classes.getSelectedValue().toString()).subjectPlan.put(sub, timesPerWeekInt);
+                GlobalSpace.classController.getClasses().get(classes.getSelectedValue().toString()).getSubjectPlan().put(sub, timesPerWeekInt);
             }
             refreshSubjectsOfClass();
-        } else if (e.getSource().equals(remove))
-        {
+        } else if (e.getSource().equals(remove)) {
             if (classes.getSelectedIndex() != -1
-                    && subjects.getSelectedIndex() != -1)
-            {
-                GlobalSpace.classController.classes.get(classes.getSelectedValue()).subjectPlan.remove(subjects.getSelectedValue());
+                    && subjects.getSelectedIndex() != -1) {
+                GlobalSpace.classController.getClasses().get(classes.getSelectedValue()).getSubjectPlan().remove(subjects.getSelectedValue());
                 subjectsModel.remove(subjects.getSelectedIndex());
             }
         }
     }
 
-    private void refreshSubjectsOfClass()
-    {
-        if (classes.getSelectedIndex() != -1)
-        {
-            Map<SubjectPlaceHolder, Integer> map = GlobalSpace.classController.classes.get(classes.getSelectedValue()).subjectPlan;
+    private void refreshSubjectsOfClass() {
+        if (classes.getSelectedIndex() != -1) {
+            Map<SubjectPlaceHolder, Integer> map = GlobalSpace.classController.getClasses().get(classes.getSelectedValue()).getSubjectPlan();
             currentMap = map;
             subjectsModel.clear();
-            for (SubjectPlaceHolder key : map.keySet())
-            {
+            for (SubjectPlaceHolder key : map.keySet()) {
                 subjectsModel.addElement(key);
             }
         }
     }
 
     @Override
-    public void valueChanged(ListSelectionEvent e)
-    {
-        if (e.getSource().equals(classes))
-        {
+    public void valueChanged(ListSelectionEvent e) {
+        if (e.getSource().equals(classes)) {
             refreshSubjectsOfClass();
             timesL.setText(GlobalStrings.timesPerWeekInClassSetUpPanel);
-        } else if (e.getSource().equals(subjects))
-        {
-            if (subjects.getSelectedIndex() != -1)
-            {
+        } else if (e.getSource().equals(subjects)) {
+            if (subjects.getSelectedIndex() != -1) {
                 times.setText("" + currentMap.get(subjectsModel.get(subjects.getSelectedIndex())));
             }
         }

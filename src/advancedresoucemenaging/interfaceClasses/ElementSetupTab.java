@@ -75,17 +75,17 @@ public class ElementSetupTab extends GradientPanel implements ActionListener
         easyButton = new JRadioButtonMenuItem("Easy");
         easyButton.addActionListener((e) ->
         {
-            GlobalSpace.subjectController.subjects.get(subjects.getSelectedIndex()).setHardness(1);
+            GlobalSpace.subjectController.getSubjects().get(subjects.getSelectedIndex()).setHardness(1);
         });
         mediumButton = new JRadioButtonMenuItem("Medium");
         mediumButton.addActionListener((e) ->
         {
-            GlobalSpace.subjectController.subjects.get(subjects.getSelectedIndex()).setHardness(2);
+            GlobalSpace.subjectController.getSubjects().get(subjects.getSelectedIndex()).setHardness(2);
         });
         hardButton = new JRadioButtonMenuItem("Hard");
         hardButton.addActionListener((e) ->
         {
-            GlobalSpace.subjectController.subjects.get(subjects.getSelectedIndex()).setHardness(3);
+            GlobalSpace.subjectController.getSubjects().get(subjects.getSelectedIndex()).setHardness(3);
         });
         men.add(easyButton);
         men.add(mediumButton);
@@ -106,7 +106,7 @@ public class ElementSetupTab extends GradientPanel implements ActionListener
                 if (!subjectsModel.isEmpty() && e.getButton() == MouseEvent.BUTTON3 && con)
                 {
 
-                    int hardnes = GlobalSpace.subjectController.subjects.get(subjects.getSelectedIndex()).getHardness();
+                    int hardnes = GlobalSpace.subjectController.getSubjects().get(subjects.getSelectedIndex()).getHardness();
                     switch (hardnes)
                     {
                         case Subject.EASY:
@@ -241,17 +241,17 @@ public class ElementSetupTab extends GradientPanel implements ActionListener
         teachersModel.clear();
         subjectsModel.clear();
         classesModel.clear();
-        for (advancedresoucemenaging.dataHandling.Class clas : GlobalSpace.classController.classes.values())
+        for (advancedresoucemenaging.dataHandling.Class clas : GlobalSpace.classController.getClasses().values())
         {
-            classesModel.addElement(clas.name);
+            classesModel.addElement(clas.getName());
         }
-        for (int i = 0; i < GlobalSpace.subjectController.subjects.size(); i++)
+        for (int i = 0; i < GlobalSpace.subjectController.getSubjects().size(); i++)
         {
-            subjectsModel.addElement(GlobalSpace.subjectController.subjects.get(i).getName());
+            subjectsModel.addElement(GlobalSpace.subjectController.getSubjects().get(i).getName());
         }
-        for (int i = 0; i < GlobalSpace.teacherController.teachers.size(); i++)
+        for (int i = 0; i < GlobalSpace.teacherController.getTeachers().size(); i++)
         {
-            teachersModel.addElement(GlobalSpace.teacherController.teachers.get(i));
+            teachersModel.addElement(GlobalSpace.teacherController.getTeachers().get(i));
         }
     }
 }

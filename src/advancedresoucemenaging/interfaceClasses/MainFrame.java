@@ -22,7 +22,7 @@ import advancedresoucemenaging.GUIClasses.GUIElements;
 import advancedresoucemenaging.GUIClasses.GUISizeController;
 import advancedresoucemenaging.dataHandling.GlobalSpace;
 import advancedresoucemenaging.dataHandling.GlobalStrings;
-import advancedresoucemenaging.dataHandling.Settings;
+import advancedresoucemenaging.dataHandling.GlobalSettings;
 import advancedresoucemenaging.dataLoading.SavingLoadingSystem;
 import com.alee.laf.menu.WebCheckBoxMenuItem;
 import com.alee.laf.menu.WebMenu;
@@ -153,14 +153,14 @@ public class MainFrame extends JFrame implements ActionListener
         shuffle = new WebCheckBoxMenuItem(GlobalStrings.shuffleString);
         shuffle.addActionListener(event ->
         {
-            Settings.shuffling = shuffle.isSelected();
+            GlobalSettings.shuffling = shuffle.isSelected();
         });
         shuffle.setToolTipText(GlobalStrings.shuffleToolTipString);
         settingsMenu.add(shuffle);
         harndesSort = new WebCheckBoxMenuItem(GlobalStrings.hardesSortString);
         harndesSort.addActionListener(event ->
         {
-            Settings.hardnesSort = harndesSort.isSelected();
+            GlobalSettings.hardnesSort = harndesSort.isSelected();
         });
         harndesSort.setToolTipText(GlobalStrings.hardesSortStringToolTipString);
         settingsMenu.add(harndesSort);
@@ -168,7 +168,7 @@ public class MainFrame extends JFrame implements ActionListener
         complateGeneration = new WebCheckBoxMenuItem(GlobalStrings.complateGeneration);
         harndesSort.addActionListener(event ->
         {
-            Settings.complateGeneration = complateGeneration.isSelected();
+            GlobalSettings.complateGeneration = complateGeneration.isSelected();
         });
         complateGeneration.setToolTipText(GlobalStrings.complateGenerationToolTipString);
         settingsMenu.add(complateGeneration);
@@ -176,7 +176,7 @@ public class MainFrame extends JFrame implements ActionListener
         mistakeCheckerSkip = new WebCheckBoxMenuItem(GlobalStrings.mistakeCheckerSkip);
         mistakeCheckerSkip.addActionListener(event ->
         {
-            Settings.mistakeCheckerSkip = mistakeCheckerSkip.isSelected();
+            GlobalSettings.mistakeCheckerSkip = mistakeCheckerSkip.isSelected();
         });
         mistakeCheckerSkip.setToolTipText(GlobalStrings.mistakeCheckerSkipToolTipString);
         settingsMenu.add(mistakeCheckerSkip);
@@ -335,7 +335,7 @@ public class MainFrame extends JFrame implements ActionListener
                 ((PreScheduleTab) tabs.getSelectedComponent()).refresh();
                 break;
             case 6:
-                ((Proparties) tabs.getSelectedComponent()).refresh();
+                ((ClassesConditionsTab) tabs.getSelectedComponent()).refresh();
                 break;
         }
     }

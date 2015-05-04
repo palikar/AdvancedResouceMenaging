@@ -178,7 +178,7 @@ public class ConditionDescription
                 int index = ((JComboBox) comp).getSelectedIndex();
                 JComboBox box = ((JComboBox) comp);
                 box.removeAllItems();
-                for (Subject subject : GlobalSpace.subjectController.subjects)
+                for (Subject subject : GlobalSpace.subjectController.getSubjects())
                 {
                     box.addItem(subject.getName());
                 }

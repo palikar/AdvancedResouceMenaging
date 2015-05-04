@@ -91,12 +91,12 @@ public class MainFrame extends JFrame implements ActionListener
         tabs = new JTabbedPane(JTabbedPane.LEFT, JTabbedPane.SCROLL_TAB_LAYOUT);
         tabs.setUI(new AquaBarTabbedPaneUI());
         tabs.setFont(new Font("SansSerif", Font.ITALIC | Font.BOLD, 15));
-        tabs.add(new ControlPanel(), GlobalStrings.mainPanelString);
-        tabs.add(new ElementsTab(), GlobalStrings.elementPanelString);
-        tabs.add(new ClassesSetUp(), GlobalStrings.classesPanelString);
-        tabs.add(new Plan(), GlobalStrings.planForStudPanelString);
-        tabs.add(new TeacherSchedule(), GlobalStrings.planForTeachPanelString);
-        tabs.add(new PreSchedule(), GlobalStrings.prePlanPanelString);
+        tabs.add(new MainTab(), GlobalStrings.mainPanelString);
+        tabs.add(new ElementSetupTab(), GlobalStrings.elementPanelString);
+        tabs.add(new ClassesSetupTab(), GlobalStrings.classesPanelString);
+        tabs.add(new StudentScheduleTab(), GlobalStrings.planForStudPanelString);
+        tabs.add(new TeacherScheduleTab(), GlobalStrings.planForTeachPanelString);
+        tabs.add(new PreScheduleTab(), GlobalStrings.prePlanPanelString);
        // tabs.add(new Proparties(), GlobalStrings.propPanelString);
 
         //Tabs hot keys
@@ -304,7 +304,7 @@ public class MainFrame extends JFrame implements ActionListener
                             new File(chooser.getSelectedFile().getCanonicalPath() + ".pdf"));
                 } catch (IOException ex)
                 {
-                    Logger.getLogger(Plan.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(StudentScheduleTab.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
@@ -317,22 +317,22 @@ public class MainFrame extends JFrame implements ActionListener
         switch (tabs.getSelectedIndex())
         {
             case 0:
-                ((ControlPanel) tabs.getSelectedComponent()).refresh();
+                ((MainTab) tabs.getSelectedComponent()).refresh();
                 break;
             case 1:
-                ((ElementsTab) tabs.getSelectedComponent()).refresh();
+                ((ElementSetupTab) tabs.getSelectedComponent()).refresh();
                 break;
             case 2:
-                ((ClassesSetUp) tabs.getSelectedComponent()).refresh();
+                ((ClassesSetupTab) tabs.getSelectedComponent()).refresh();
                 break;
             case 3:
-                ((Plan) tabs.getSelectedComponent()).refresh();
+                ((StudentScheduleTab) tabs.getSelectedComponent()).refresh();
                 break;
             case 4:
-                ((TeacherSchedule) tabs.getSelectedComponent()).refresh();
+                ((TeacherScheduleTab) tabs.getSelectedComponent()).refresh();
                 break;
             case 5:
-                ((PreSchedule) tabs.getSelectedComponent()).refresh();
+                ((PreScheduleTab) tabs.getSelectedComponent()).refresh();
                 break;
             case 6:
                 ((Proparties) tabs.getSelectedComponent()).refresh();

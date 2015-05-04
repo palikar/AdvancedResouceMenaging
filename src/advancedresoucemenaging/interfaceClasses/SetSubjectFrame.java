@@ -39,7 +39,7 @@ import javax.swing.event.ListSelectionListener;
  *
  * @author Stanisalv
  */
-public class SetSubject extends JFrame implements WindowFocusListener, WindowListener, ListSelectionListener
+public class SetSubjectFrame extends JFrame implements WindowFocusListener, WindowListener, ListSelectionListener
 {
 
     JList<SubjectPlaceHolder> subs, teachers;
@@ -48,7 +48,7 @@ public class SetSubject extends JFrame implements WindowFocusListener, WindowLis
     int day, hour;
     int hoveredIntex = -1;
 
-    public SetSubject(Object[] subjects, int day, int hour, String clas)
+    public SetSubjectFrame(Object[] subjects, int day, int hour, String clas)
     {
         super("Поставяне на предмет");
         //<editor-fold defaultstate="collapsed" desc="Basic frame custumazation">

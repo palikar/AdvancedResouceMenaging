@@ -22,9 +22,10 @@ import advancedresoucemenaging.GUIClasses.GradientPanel;
 import advancedresoucemenaging.dataHandling.GlobalSpace;
 import advancedresoucemenaging.dataHandling.GlobalStrings;
 import advancedresoucemenaging.dataLoading.SavingLoadingSystem;
+import advancedresoucemenaging.tableSTuff.SubjectCellRenderer;
 import advancedresoucemenaging.tableSTuff.JLableCellRenderer;
 import advancedresoucemenaging.tableSTuff.TableControl;
-import advancedresoucemenaging.tableSTuff.TeacherPlanModel;
+import advancedresoucemenaging.tableSTuff.StudentPlanTableModel;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -40,59 +41,100 @@ import net.miginfocom.swing.MigLayout;
  *
  * @author Stanisalv
  */
-public class TeacherSchedule extends GradientPanel
+public class StudentScheduleTab extends GradientPanel
 {
 
-    JComboBox<Object> teachers;
-    JButton print;
+    JComboBox<Object> classes;
+    JButton print, makePlan;
     JTable table;
     JScrollPane sp;
-    TeacherPlanModel model;
+    StudentPlanTableModel model;
 
-    public TeacherSchedule()
+    public StudentScheduleTab()
     {
         super(new MigLayout());
 
-        JLabel classL = new JLabel(GlobalStrings.teacherString);
-        add(classL, "gapleft 0.5cm,gaptop 0.5cm, split 3");
+        JLabel classL = new JLabel(GlobalStrings.classString);
+        add(classL, "gapleft 0.5cm,gaptop 0.5cm,split 4");
 
-        teachers = GUIElements.getComboField();
-        teachers.setPreferredSize(new Dimension(125, 35));
-        teachers.addActionListener(new ActionListener()
+        classes = GUIElements.getComboField();
+        classes.setPreferredSize(new Dimension(125, 35));
+        classes.addActionListener((event) ->
         {
-
-            @Override
-            public void actionPerformed(ActionEvent e)
+            if (classes.getSelectedIndex() != -1)
             {
-                if (teachers.getSelectedIndex() != -1)
-                {
-                    TableControl.selectedTeacher = teachers.getSelectedItem().toString();
-                    model.fireTableDataChanged();
-                }
+                TableControl.selectedClass = classes.getSelectedItem().toString();
+                model.fireTableDataChanged();
             }
         });
-        add(teachers, "gaptop 0.5cm");
+        add(classes, "gaptop 0.5cm");
+
         print = GUIElements.getButton(GlobalStrings.saveToPdfString);
-        print.addActionListener((event) ->
+        print.setBounds(225, 25, 150, 35);
+        print.addActionListener((e) ->
         {
             JFileChooser chooser = new JFileChooser();
             chooser.setFont(new Font("SansSerif", Font.ITALIC | Font.BOLD, 10));
-            chooser.setSelectedFile(new File("Teacher_Schadule_" + System.currentTimeMillis() / 1000 + ".pdf"));
+            chooser.setSelectedFile(new File("School_Schadule_" + System.currentTimeMillis() / 1000 + ".pdf"));
+
             if (chooser.showSaveDialog(this) == chooser.APPROVE_OPTION)
             {
+
                 try
                 {
-                    SavingLoadingSystem.saveTeachersScheduleToPdf(
+                    SavingLoadingSystem.saveClassesScheduleToPdf(
                             new File(chooser.getSelectedFile().getCanonicalPath() + ".pdf"));
                 } catch (IOException ex)
                 {
-                    Logger.getLogger(Plan.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(StudentScheduleTab.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
-        add(print, "wrap 0.5cm,gaptop 0.5cm");
+        add(print, "gaptop 0.5cm");
 
-        model = new TeacherPlanModel();
+        makePlan = GUIElements.getButton(GlobalStrings.makeString);
+        makePlan.setBounds(385, 25, 125, 35);
+        makePlan.addActionListener((ActionEvent event) ->
+        {
+            new Thread(new Runnable()
+            {
+
+                @Override
+                public void run()
+                {
+                    GlobalSpace.setUpController();
+                    GlobalSpace.makePlan();
+                    model.fireTableDataChanged();
+                    table.repaint();
+
+                }
+            }).start();
+            new Thread(new Runnable()
+            {
+
+                @Override
+                public void run()
+                {
+                    while (!GlobalSpace.ready)
+                    {
+                        try
+                        {
+                            GlobalSpace.updateClassController();
+                            model.fireTableDataChanged();
+                            table.repaint();
+                            Thread.sleep(50);
+                        } catch (InterruptedException ex)
+                        {
+                            Logger.getLogger(StudentScheduleTab.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+
+                }
+            }).start();
+        });
+        add(makePlan, "wrap 0.5cm");
+
+        model = new StudentPlanTableModel();
         table = new JTable(model);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table.setRowSelectionAllowed(true);
@@ -107,17 +149,22 @@ public class TeacherSchedule extends GradientPanel
         table.setGridColor(Colors.tableGridColor);
         table.setSelectionBackground(Colors.tableSelectionBackGround);
         table.getTableHeader().setForeground(Colors.tableHeaderColor);
-
+        
         table.setCellSelectionEnabled(true);
-
-        table.setDefaultRenderer(Object.class, new JLableCellRenderer());
-
+        
         table.getColumnModel().getColumn(0).setPreferredWidth(45);
         table.getColumnModel().getColumn(1).setPreferredWidth(137);
         table.getColumnModel().getColumn(2).setPreferredWidth(138);
         table.getColumnModel().getColumn(3).setPreferredWidth(138);
         table.getColumnModel().getColumn(4).setPreferredWidth(138);
         table.getColumnModel().getColumn(5).setPreferredWidth(138);
+
+        table.getColumnModel().getColumn(0).setCellRenderer(new JLableCellRenderer());
+        table.getColumnModel().getColumn(1).setCellRenderer(new SubjectCellRenderer());
+        table.getColumnModel().getColumn(2).setCellRenderer(new SubjectCellRenderer());
+        table.getColumnModel().getColumn(3).setCellRenderer(new SubjectCellRenderer());
+        table.getColumnModel().getColumn(4).setCellRenderer(new SubjectCellRenderer());
+        table.getColumnModel().getColumn(5).setCellRenderer(new SubjectCellRenderer());
 
         sp = new JScrollPane(table);
         sp.setPreferredSize(new Dimension(736, 456));
@@ -126,10 +173,10 @@ public class TeacherSchedule extends GradientPanel
 
     public void refresh()
     {
-        teachers.removeAllItems();
-        for (int i = 0; i < GlobalSpace.teacherController.teachers.size(); i++)
+        classes.removeAllItems();
+        for (advancedresoucemenaging.dataHandling.Class clas : GlobalSpace.classController.classes.values())
         {
-            teachers.addItem(GlobalSpace.teacherController.teachers.get(i));
+            classes.addItem(clas.name);
         }
     }
 }

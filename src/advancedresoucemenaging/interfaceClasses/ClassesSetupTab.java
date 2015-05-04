@@ -38,7 +38,7 @@ import net.miginfocom.swing.MigLayout;
  *
  * @author Stanisalv
  */
-public class ClassesSetUp extends GradientPanel implements ActionListener, ListSelectionListener
+public class ClassesSetupTab extends GradientPanel implements ActionListener, ListSelectionListener
 {
 
     DefaultListModel<Object> classesModel;
@@ -52,7 +52,7 @@ public class ClassesSetUp extends GradientPanel implements ActionListener, ListS
     Map<SubjectPlaceHolder, Integer> currentMap;
     JLabel timesL;
 
-    public ClassesSetUp()
+    public ClassesSetupTab()
     {
         super(new MigLayout());
 

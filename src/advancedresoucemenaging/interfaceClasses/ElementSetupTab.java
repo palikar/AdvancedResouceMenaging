@@ -40,7 +40,7 @@ import javafx.scene.input.MouseButton;
  *
  * @author Stanisalv
  */
-public class ElementsTab extends GradientPanel implements ActionListener
+public class ElementSetupTab extends GradientPanel implements ActionListener
 {
 
     JList<Object> classes, subjects, teachers;
@@ -48,7 +48,7 @@ public class ElementsTab extends GradientPanel implements ActionListener
     JButton add1, add2, add3, remove1, remove2, remove3;
     JRadioButtonMenuItem easyButton, mediumButton, hardButton;
 
-    public ElementsTab()
+    public ElementSetupTab()
     {
         super(new MigLayout("", "", ""));
 

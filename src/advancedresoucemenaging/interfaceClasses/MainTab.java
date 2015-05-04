@@ -39,7 +39,7 @@ import net.miginfocom.swing.MigLayout;
  *
  * @author Stanisalv
  */
-public class ControlPanel extends GradientPanel implements ActionListener, ListSelectionListener {
+public class MainTab extends GradientPanel implements ActionListener, ListSelectionListener {
 
     JButton save, load;
     JTextField opened, school, diretor;
@@ -51,7 +51,7 @@ public class ControlPanel extends GradientPanel implements ActionListener, ListS
     JTextField value;
     JButton addParam, removeParam;
 
-    public ControlPanel() {
+    public MainTab() {
         super(new MigLayout());
         save = GUIElements.getButton(GlobalStrings.saveString);
         save.addActionListener(this);

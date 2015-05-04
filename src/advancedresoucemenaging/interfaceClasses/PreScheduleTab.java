@@ -37,7 +37,7 @@ import net.miginfocom.swing.MigLayout;
  *
  * @author Stanisalv
  */
-public class PreSchedule extends GradientPanel implements MouseListener, ActionListener
+public class PreScheduleTab extends GradientPanel implements MouseListener, ActionListener
 {
 
     JTable table;
@@ -46,7 +46,7 @@ public class PreSchedule extends GradientPanel implements MouseListener, ActionL
     JComboBox<Object> classes;
     JButton clearClass, clearAll;
 
-    public PreSchedule()
+    public PreScheduleTab()
     {
         super(new MigLayout());
 
@@ -135,7 +135,7 @@ public class PreSchedule extends GradientPanel implements MouseListener, ActionL
             return;
         }
 
-        ob = new SetSubject(GlobalSpace.classController.classes.get(TableControl.selectedClass).subjectPlan.keySet().toArray(),
+        ob = new SetSubjectFrame(GlobalSpace.classController.classes.get(TableControl.selectedClass).subjectPlan.keySet().toArray(),
                 col,
                 row,
                 TableControl.selectedClass)

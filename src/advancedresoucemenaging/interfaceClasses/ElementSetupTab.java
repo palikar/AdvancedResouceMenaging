@@ -30,11 +30,8 @@ import static advancedresoucemenaging.GUIClasses.GUIElements.getButton;
 import advancedresoucemenaging.dataHandling.GlobalStrings;
 import advancedresoucemenaging.dataHandling.Subject;
 import com.alee.laf.scroll.WebScrollPane;
-import java.awt.PopupMenu;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import static java.awt.image.ImageObserver.WIDTH;
-import javafx.scene.input.MouseButton;
 
 /**
  *
@@ -240,7 +237,6 @@ public class ElementSetupTab extends GradientPanel implements ActionListener
         classesModel.clear();
         teachersModel.clear();
         subjectsModel.clear();
-        classesModel.clear();
         for (advancedresoucemenaging.dataHandling.Class clas : GlobalSpace.classController.getClasses().values())
         {
             classesModel.addElement(clas.getName());

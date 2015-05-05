@@ -22,45 +22,56 @@ import java.util.Objects;
  *
  * @author Stanisalv
  */
-public class SubjectPlaceHolder {
+public class SubjectPlaceHolder
+{
+
+    public static final SubjectPlaceHolder empty = new SubjectPlaceHolder();
 
     String subject;
     String teacher;
 
-    public SubjectPlaceHolder() {
+    public SubjectPlaceHolder()
+    {
         subject = "unknown";
         teacher = "unknown";
     }
 
-    public SubjectPlaceHolder(String subject, String teacher) {
+    public SubjectPlaceHolder(String subject, String teacher)
+    {
         this.subject = subject;
         this.teacher = teacher;
     }
 
-    public String getSubject() {
+    public String getSubject()
+    {
         return subject;
     }
 
-    public void setSubject(String subject) {
+    public void setSubject(String subject)
+    {
         this.subject = subject;
     }
 
-    public String getTeacher() {
+    public String getTeacher()
+    {
         return teacher;
     }
 
-    public void setTeacher(String teacher) {
+    public void setTeacher(String teacher)
+    {
         this.teacher = teacher;
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj)
+    {
         return ((SubjectPlaceHolder) obj).teacher.equals(teacher)
                 && ((SubjectPlaceHolder) obj).subject.equals(subject);
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         int hash = 7;
         hash = 29 * hash + Objects.hashCode(this.subject);
         hash = 29 * hash + Objects.hashCode(this.teacher);

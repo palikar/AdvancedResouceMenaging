@@ -27,6 +27,7 @@ public class Subject
     public static final int MEDIUM = 2;
     public static final int HARD = 3;
 
+
     private String name;
     private int hardness;
 

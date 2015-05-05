@@ -23,7 +23,6 @@ import advancedresoucemenaging.dataHandling.ScheduleFabrik;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,7 +30,8 @@ import java.util.Map;
  *
  * @author Stanisalv
  */
-public class HourNode {
+public class HourNode
+{
 
     SubjectPlaceHolder placeHolder;
     ArrayList<HourNode> sameTimeConnection;
@@ -50,7 +50,8 @@ public class HourNode {
     int day, hour;
     Point weekPoint;
 
-    public HourNode(int day, int hour) {
+    public HourNode(int day, int hour)
+    {
         placeHolder = new SubjectPlaceHolder();
         sameTimeConnection = new ArrayList<>();
         specialConnection = new ArrayList<>();
@@ -65,18 +66,23 @@ public class HourNode {
 
     }
 
-    public HourNode(SubjectPlaceHolder placeHolder, int day, int hour) {
+    public HourNode(SubjectPlaceHolder placeHolder, int day, int hour)
+    {
         this(day, hour);
         this.placeHolder = placeHolder;
     }
 
-    public void setConsecitiveCondition(SubjectPlaceHolder subject) {
+    public void setConsecitiveCondition(SubjectPlaceHolder subject)
+    {
         con.add(new MustBeConsecitiveCondition(this, subject));
     }
 
-    public boolean complateCondition() {
-        for (int i = 0; i < con.size(); i++) {
-            if (!con.get(i).complate()) {
+    public boolean complateCondition()
+    {
+        for (int i = 0; i < con.size(); i++)
+        {
+            if (!con.get(i).complate())
+            {
                 return false;
             }
         }
@@ -84,27 +90,35 @@ public class HourNode {
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return placeHolder.subject;
     }
 
-    boolean isSet() {
+    boolean isSet()
+    {
         return set;
     }
 
-    public HourNode getNext() {
-        if (this.nextHour != null) {
+    public HourNode getNext()
+    {
+        if (this.nextHour != null)
+        {
             return this.nextHour;
-        } else if (this.nextDayConnection != null) {
+        } else if (this.nextDayConnection != null)
+        {
             return this.nextDayConnection.hours.get(0);
-        } else {
+        } else
+        {
             return null;
         }
     }
 
-    public void set(SubjectPlaceHolder sub) {
-        if (this.sameClass.getOccurance(sub) == this.sameClass.getSubjectPlan(sub)) {
-            System.out.println("asdsadasdsa");
+    public void set(SubjectPlaceHolder sub)
+    {
+        if (this.sameClass.getOccurance(sub) == this.sameClass.getSubjectPlan(sub))
+        {
+//            System.out.println("asdsadasdsa");
             return;
 
         }
@@ -118,10 +132,12 @@ public class HourNode {
         propagetThroughSingeltoneDomains();
     }
 
-    public void setManual(SubjectPlaceHolder sub) {
+    public void setManual(SubjectPlaceHolder sub)
+    {
         this.placeHolder = sub;
         this.sameClass.addOccurence(sub);
-        if (this.sameClass.getOccurance(sub) > this.sameClass.getSubjectPlan(sub)) {
+        if (this.sameClass.getOccurance(sub) > this.sameClass.getSubjectPlan(sub))
+        {
             this.sameClass.removeOccurence(sub);
             this.placeHolder = new SubjectPlaceHolder("unknown", "unknown");
         }
@@ -130,13 +146,16 @@ public class HourNode {
         propagateThroughDayAndReduceDomain();
     }
 
-    public void unSet() {
-        if (!set) {
+    public void unSet()
+    {
+        if (!set)
+        {
             return;
         }
         set = false;
         sameClass.removeOccurence(placeHolder);
-        for (int i = 0; i < con.size(); i++) {
+        for (int i = 0; i < con.size(); i++)
+        {
             Condition condition = con.get(i);
             condition.unComplate();
         }
@@ -151,28 +170,37 @@ public class HourNode {
 
     }
 
-    private void propagateThroughDayAndReduceDomain() {
+    private void propagateThroughDayAndReduceDomain()
+    {
         ArrayList<HourNode> nodesOfDay = this.sameDayConnection.hours;
-        for (HourNode node : nodesOfDay) {
-            if (!node.isSet()) {
+        for (HourNode node : nodesOfDay)
+        {
+            if (!node.isSet())
+            {
                 node.domain.remove(this.placeHolder);
             }
         }
     }
 
-    private void propagateThroughClassesAndReduceDomain() {
-        for (int i = 0; i < this.sameTimeConnection.size(); i++) {
-            if (!this.sameTimeConnection.get(i).isSet()) {
+    private void propagateThroughClassesAndReduceDomain()
+    {
+        for (int i = 0; i < this.sameTimeConnection.size(); i++)
+        {
+            if (!this.sameTimeConnection.get(i).isSet())
+            {
                 this.sameTimeConnection.get(i).domain.remove(placeHolder);
             }
         }
     }
 
-    private boolean propagetThroughSingeltoneDomains() {
+    private boolean propagetThroughSingeltoneDomains()
+    {
         ArrayList<HourNode> allNodes = ScheduleFabrik.algControll.state;
-        for (HourNode node : allNodes) {
+        for (HourNode node : allNodes)
+        {
 
-            if (node.isSingeltoneDomain() && !node.isSet() && !node.sameClass.isReady()) {
+            if (node.isSingeltoneDomain() && !node.isSet() && !node.sameClass.isReady())
+            {
                 setSingeltones.add(node);
                 node.set(node.domain.get(0));
             }
@@ -181,12 +209,18 @@ public class HourNode {
         return true;
     }
 
-    private void propagateThroughWeekAndReduceDomain() {
-        if (this.sameClass.getOccurance(placeHolder) == this.sameClass.getSubjectPlan(placeHolder)) {
-            for (DayNode day : sameClass.days) {
-                for (HourNode hour : day.hours) {
-                    if (!hour.isSet()) {
-                        if (hour.domain.remove(placeHolder)) {
+    private void propagateThroughWeekAndReduceDomain()
+    {
+        if (this.sameClass.getOccurance(placeHolder) == this.sameClass.getSubjectPlan(placeHolder))
+        {
+            for (DayNode day : sameClass.days)
+            {
+                for (HourNode hour : day.hours)
+                {
+                    if (!hour.isSet())
+                    {
+                        if (hour.domain.remove(placeHolder))
+                        {
                             weekReductions.add(hour.weekPoint);
                         }
 
@@ -197,10 +231,14 @@ public class HourNode {
         }
     }
 
-    private void restoreWeekDomain() {
-        if (this.sameClass.getOccurance(placeHolder) != this.sameClass.getSubjectPlan(placeHolder)) {
-            for (DayNode day : sameClass.days) {
-                for (HourNode hour : day.hours) {
+    private void restoreWeekDomain()
+    {
+        if (this.sameClass.getOccurance(placeHolder) != this.sameClass.getSubjectPlan(placeHolder))
+        {
+            for (DayNode day : sameClass.days)
+            {
+                for (HourNode hour : day.hours)
+                {
                     if (weekReductions.contains(hour.weekPoint));
                     {
                         hour.domain.add(placeHolder);
@@ -212,102 +250,133 @@ public class HourNode {
         }
     }
 
-    private void restoreSingeltoneDomains() {
-        for (HourNode node : setSingeltones) {
+    private void restoreSingeltoneDomains()
+    {
+        for (HourNode node : setSingeltones)
+        {
             node.unSet();
         }
     }
 
-    private void restoreClassesDomain() {
-        for (int i = 0; i < this.sameTimeConnection.size(); i++) {
-            if (!this.sameTimeConnection.get(i).isSet()) {
+    private void restoreClassesDomain()
+    {
+        for (int i = 0; i < this.sameTimeConnection.size(); i++)
+        {
+            if (!this.sameTimeConnection.get(i).isSet())
+            {
                 this.sameTimeConnection.get(i).domain.add(placeHolder);
             }
         }
     }
 
-    public ArrayList<SubjectPlaceHolder> getDomain() {
+    public ArrayList<SubjectPlaceHolder> getDomain()
+    {
 
         return null;
 
     }
 
-    private void restoreDayDomain() {
+    private void restoreDayDomain()
+    {
         ArrayList<HourNode> nodesOfDay = this.sameDayConnection.hours;
-        for (HourNode node : nodesOfDay) {
-            if (!node.isSet() && node != this) {
+        for (HourNode node : nodesOfDay)
+        {
+            if (!node.isSet() && node != this)
+            {
                 node.domain.add(this.placeHolder);
             }
         }
     }
 
-    void sortByHardness() {
-        domain.sort((SubjectPlaceHolder o1, SubjectPlaceHolder o2) -> {
+    void sortByHardness()
+    {
+        domain.sort((SubjectPlaceHolder o1, SubjectPlaceHolder o2) ->
+        {
             int hard1 = GlobalSpace.subjectController.getSubjectsMap().get(o1.getSubject()).getHardness();
             int hard2 = GlobalSpace.subjectController.getSubjectsMap().get(o2.getSubject()).getHardness();
-            if (hard1 > hard2) {
+            if (hard1 > hard2)
+            {
                 return -1;
-            } else if (hard1 < hard2) {
+            } else if (hard1 < hard2)
+            {
                 return 1;
             }
             return 0;
         });
     }
 
-    public void shuffelDomain(boolean sorted) {
-        if (!sorted) {
+    public void shuffelDomain(boolean sorted)
+    {
+        if (!sorted)
+        {
             Collections.shuffle(domain);
-        } else {
+        } else
+        {
             shuffelSorted();
         }
     }
 
-    private void shuffelSorted() {
+    private void shuffelSorted()
+    {
         Map<Integer, ArrayList<SubjectPlaceHolder>> map = new HashMap<>();
-        domain.forEach(element -> {
+        domain.forEach(element ->
+        {
             int hardess = GlobalSpace.subjectController.getSubjectsMap().get(element.getSubject()).getHardness();
-            if (!map.containsKey(hardess)) {
+            if (!map.containsKey(hardess))
+            {
                 map.put(hardess, new ArrayList<SubjectPlaceHolder>());
             }
             map.get(hardess).add(element);
         }
         );
-        map.values().forEach(element -> {
+        map.values().forEach(element ->
+        {
             Collections.shuffle(element);
         });
         domain.clear();
 
-        for (int i = 3; i >= 1; i--) {
-            for (Map.Entry<Integer, ArrayList<SubjectPlaceHolder>> entry : map.entrySet()) {
-                if (entry.getKey() == i) {
+        for (int i = 3; i >= 1; i--)
+        {
+            for (Map.Entry<Integer, ArrayList<SubjectPlaceHolder>> entry : map.entrySet())
+            {
+                if (entry.getKey() == i)
+                {
                     domain.addAll(entry.getValue());
                 }
 
             }
         }
-        domain.forEach(element -> {
+        domain.forEach(element ->
+        {
             System.out.println(element.getSubject());
         });
     }
 
-    public boolean isSingeltoneDomain() {
+    public boolean isSingeltoneDomain()
+    {
         return domain.size() == 1;
     }
 
-    public SubjectPlaceHolder getPlaceHolder() {
+    public SubjectPlaceHolder getPlaceHolder()
+    {
         return placeHolder;
     }
 
-    boolean aloneEmpyDomain() {
+    boolean aloneEmpyDomain()
+    {
         int cnt = 0;
-        for (HourNode node : sameDayConnection.hours) {
-            if (node.domain.isEmpty()) {
+        for (HourNode node : sameDayConnection.hours)
+        {
+            if (node.domain.isEmpty())
+            {
                 cnt++;
             }
         }
-        if (cnt == 1) {
+        if (cnt == 1)
+        {
             return true;
-        } else {
+        } else
+        {
             return false;
         }
     }

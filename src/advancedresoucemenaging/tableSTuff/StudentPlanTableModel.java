@@ -38,6 +38,7 @@ public class StudentPlanTableModel extends AbstractTableModel
         GlobalStrings.thusdayString,
         GlobalStrings.fridayString
     };
+    private String selectedClass = null;
 
     public StudentPlanTableModel()
     {
@@ -98,11 +99,20 @@ public class StudentPlanTableModel extends AbstractTableModel
             }
         } else
         {
+            if (selectedClass != null)
+            {
+                return GlobalSpace.classController.getClasses().get(selectedClass).getSchedule()[columnIndex - 1][rowIndex];
+            }
             if (!TableControl.selectedClass.equals(""))
             {
                 return GlobalSpace.classController.getClasses().get(TableControl.selectedClass).getSchedule()[columnIndex - 1][rowIndex];
             }
         }
         return new SubjectPlaceHolder();
+    }
+
+    public void setSelected(String clas)
+    {
+        this.selectedClass = clas;
     }
 }

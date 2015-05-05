@@ -17,6 +17,7 @@
 package advancedresoucemenaging.dataHandling;
 
 import advancedresoucemenaging.algStuff.Controller;
+import java.util.ArrayList;
 
 /**
  *
@@ -27,10 +28,12 @@ public class ScheduleFabrik
 
     static public Controller algControll;
     static public ClassChecker mistakeFinder;
+    static public ArrayList<ClassChecker.SubjectLocation> holes;
 
     static
     {
         mistakeFinder = new ClassChecker();
+        holes = new ArrayList<>();
     }
 
 }

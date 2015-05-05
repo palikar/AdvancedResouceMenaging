@@ -16,8 +16,6 @@
  */
 package advancedresoucemenaging.dataHandling;
 
-import javax.swing.Action;
-
 /**
  *
  * @author Stanisalv
@@ -96,4 +94,5 @@ public class GlobalStrings
     public static String complateGenerationToolTipString = "Програмата ще се опита да генерира разписанието на всички класове на веднъж";
     public static String mistakeCheckerSkip = "Презкачане на прогверката за грешки";
     public static String mistakeCheckerSkipToolTipString = "Програмата няма да провери първоначално изготвеното разписание за грешки";
+    public static String alwaysOnTopString = "Винаги отгоре";
 }

@@ -16,15 +16,17 @@
  */
 package advancedresoucemenaging.tableSTuff;
 
+import advancedresoucemenaging.Action;
 import advancedresoucemenaging.GUIClasses.Colors;
 import advancedresoucemenaging.GUIClasses.GUIElements;
-import advancedresoucemenaging.conditionClasses.ConditionDescription;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
@@ -38,23 +40,28 @@ import javax.swing.table.DefaultTableCellRenderer;
 public class WeekTable extends JTable
 {
 
-    Color[][] customSelection = new Color[5][7];
+    private Color[][] customColors = new Color[5][7];
+    private boolean[][] customSelection = new boolean[5][7];
+    private Point lastSelected;
+    private Action valueChanged;
 
     public WeekTable()
     {
         super();
+        lastSelected = new Point();
 
         for (int i = 0; i < 5; i++)
         {
             for (int j = 0; j < 7; j++)
             {
-                customSelection[i][j] = Colors.weekTableDisabledColor;
+                customColors[i][j] = Colors.weekTableDisabledColor;
+                customSelection[i][j] = false;
             }
         }
 
         final int rowHeght = 30;
         final int colWidth = 50;
-        setModel(new TableModel(customSelection));
+        setModel(new TableModel(customColors));
 
         setDefaultRenderer(Object.class, new ColorRenderer());
         setCellSelectionEnabled(false);
@@ -77,7 +84,14 @@ public class WeekTable extends JTable
                     changeValue(e.getX() / colWidth, e.getY() / rowHeght, Colors.weekTableDisabledColor);
                 } else
                 {
-                    changeValue(e.getX() / colWidth, e.getY() / rowHeght, Colors.weekTableEnabledColor);
+                    if (changeValue(e.getX() / colWidth, e.getY() / rowHeght, Colors.weekTableEnabledColor))
+                    {
+                        lastSelected.setLocation(e.getX() / colWidth, e.getY() / rowHeght);
+                        if (valueChanged != null)
+                        {
+                            valueChanged.perform();
+                        }
+                    }
                 }
             }
 
@@ -115,7 +129,14 @@ public class WeekTable extends JTable
                     changeValue(e.getX() / colWidth, e.getY() / rowHeght, Colors.weekTableDisabledColor);
                 } else
                 {
-                    changeValue(e.getX() / colWidth, e.getY() / rowHeght, Colors.weekTableEnabledColor);
+                    if (changeValue(e.getX() / colWidth, e.getY() / rowHeght, Colors.weekTableEnabledColor))
+                    {
+                        lastSelected.setLocation(e.getX() / colWidth, e.getY() / rowHeght);
+                        if (valueChanged != null)
+                        {
+                            valueChanged.perform();
+                        }
+                    }
                 }
             }
 
@@ -128,16 +149,62 @@ public class WeekTable extends JTable
 
     }
 
-    public void changeValue(int day, int hour, Color value)
+    public boolean changeValue(int day, int hour, Color value)
     {
         if (day >= 5 || hour >= 7 || day < 0 || hour < 0)
         {
-            return;
+            return false;
         }
 
-        customSelection[day][hour] = value;
+        if (customColors[day][hour].getRGB() == value.getRGB())
+        {
+            return false;
+        }
+
+        customColors[day][hour] = value;
+        customSelection[day][hour] = !customSelection[day][hour];
 
         tableChanged(new TableModelEvent(getModel(), hour));
+        return true;
+    }
+
+    public Point getLastSelected()
+    {
+        return lastSelected;
+    }
+
+    public void setValueChangeAction(Action ac)
+    {
+        this.valueChanged = ac;
+    }
+
+    public ArrayList<Point> getSelected()
+    {
+        ArrayList<Point> list = new ArrayList<>();
+        for (int i = 0; i < 5; i++)
+        {
+            for (int j = 0; j < 7; j++)
+            {
+                if (customSelection[i][j])
+                {
+                    list.add(new Point(i, j));
+                }
+            }
+        }
+        return list;
+    }
+
+    public void unselectAll()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            for (int j = 0; j < 7; j++)
+            {
+                customSelection[i][j] = false;
+                customColors[i][j] = Colors.weekTableDisabledColor;
+            }
+        }
+        tableChanged(new TableModelEvent(getModel()));
     }
 
 }

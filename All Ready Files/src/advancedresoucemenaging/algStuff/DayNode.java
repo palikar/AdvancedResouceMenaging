@@ -19,30 +19,50 @@ package advancedresoucemenaging.algStuff;
 import java.util.ArrayList;
 
 /**
-
- @author Stanisalv
+ *
+ * @author Stanisalv
  */
-public class DayNode {
+public class DayNode
+{
 
     ArrayList<HourNode> hours;
 
-    public DayNode() {
-	hours = new ArrayList<>();
-	for (int i = 0; i < 7; i++) {
-	    hours.add(new HourNode());
-	}
-	for (int i = 0; i < 7; i++) {
-	    if (i != 6) {
-		hours.get(i).nextHour = hours.get(i + 1);
-	    }
-	    if (i != 0) {
-		hours.get(i).prevHour = hours.get(i - 1);
-	    }
+    public DayNode(int day)
+    {
+        hours = new ArrayList<>();
+        for (int i = 0; i < 7; i++)
+        {
+            hours.add(new HourNode(day, i));
+        }
+        for (int i = 0; i < 7; i++)
+        {
+            if (i != 6)
+            {
+                hours.get(i).nextHour = hours.get(i + 1);
+            }
+            if (i != 0)
+            {
+                hours.get(i).prevHour = hours.get(i - 1);
+            }
 
-	}
+        }
     }
 
-    public ArrayList<HourNode> getHours() {
-	return hours;
+    public ArrayList<HourNode> getHours()
+    {
+        return hours;
+    }
+
+    boolean contain(SubjectPlaceHolder placeHolder)
+    {
+        for (HourNode hour : hours)
+        {
+
+            if (hour.domain.contains(null))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -18,6 +18,7 @@ package advancedresoucemenaging.tableSTuff;
 
 import advancedresoucemenaging.dataHandling.GlobalSpace;
 import advancedresoucemenaging.dataHandling.GlobalStrings;
+import java.util.Map.Entry;
 import javax.swing.JLabel;
 import javax.swing.table.AbstractTableModel;
 
@@ -33,7 +34,8 @@ public class TeacherPlanModel extends AbstractTableModel {
         GlobalStrings.tuesdaySting,
         GlobalStrings.wendsdaySting,
         GlobalStrings.thusdayString,
-        GlobalStrings.fridayString};
+        GlobalStrings.fridayString
+    };
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
@@ -90,10 +92,10 @@ public class TeacherPlanModel extends AbstractTableModel {
 
     private String getTeacher(int rowIndex, int columnIndex) {
 
-        Object[] keys = GlobalSpace.classController.schedules.keySet().toArray();
-        for (int i = 0; i < keys.length; i++) {
-            if (GlobalSpace.classController.schedules.get(keys[i])[columnIndex - 1][rowIndex].getTeacher().equals(TableControl.selectedTeacher)) {
-                return keys[i].toString();
+        for (Entry<String, advancedresoucemenaging.dataHandling.Class> clas
+                : GlobalSpace.classController.getClasses().entrySet()) {
+            if (clas.getValue().getSchedule()[columnIndex - 1][rowIndex].getTeacher().equals(TableControl.selectedTeacher)) {
+                return clas.getKey();
             }
         }
         return "";

@@ -22,7 +22,7 @@ import advancedresoucemenaging.GUIClasses.GUIElements;
 import advancedresoucemenaging.GUIClasses.GUISizeController;
 import advancedresoucemenaging.dataHandling.GlobalSpace;
 import advancedresoucemenaging.dataHandling.GlobalStrings;
-import advancedresoucemenaging.dataHandling.Settings;
+import advancedresoucemenaging.dataHandling.GlobalSettings;
 import advancedresoucemenaging.dataLoading.SavingLoadingSystem;
 import com.alee.laf.menu.WebCheckBoxMenuItem;
 import com.alee.laf.menu.WebMenu;
@@ -49,19 +49,25 @@ import javax.swing.filechooser.FileFilter;
  *
  * @author Stanisalv
  */
-public class MainFrame extends JFrame implements ActionListener {
+public class MainFrame extends JFrame implements ActionListener
+{
 
     JTabbedPane tabs;
     private final JMenu fileMenu;
     private final JMenuItem save;
     private final JMenuItem saveAs;
+    private final JMenuItem saveToPdf;
     private final JMenuItem laod;
     private final JMenuItem exit;
     private final WebCheckBoxMenuItem shuffle;
     private final WebCheckBoxMenuItem image;
     private final WebCheckBoxMenuItem gradient;
+    private final WebCheckBoxMenuItem harndesSort;
+    private final WebCheckBoxMenuItem complateGeneration;
+    private final WebCheckBoxMenuItem mistakeCheckerSkip;
 
-    public MainFrame() {
+    public MainFrame()
+    {
         //base frame settings
         super(GlobalStrings.titleString);//setting titel
         setLayout(new BorderLayout());//setting layout menager
@@ -71,10 +77,12 @@ public class MainFrame extends JFrame implements ActionListener {
         setVisible(true);
         setUIFont(GUIElements.defaultFont);//setting the font of the application
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource("advancedresoucemenaging/Timetable.png")));//setting the icon image
-        try {
+        try
+        {
             GlobalSpace.iconImage = ImageIO.read(getClass().getClassLoader().getResource("advancedresoucemenaging/Timetable.png"));
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException | IOException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException | IOException ex)
+        {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
         UIManager.put("OptionPane.border", BorderFactory.createLineBorder(new Color(200, 200, 255), 1));
@@ -83,13 +91,13 @@ public class MainFrame extends JFrame implements ActionListener {
         tabs = new JTabbedPane(JTabbedPane.LEFT, JTabbedPane.SCROLL_TAB_LAYOUT);
         tabs.setUI(new AquaBarTabbedPaneUI());
         tabs.setFont(new Font("SansSerif", Font.ITALIC | Font.BOLD, 15));
-        tabs.add(new ControlPanel(), GlobalStrings.mainPanelString);
-        tabs.add(new ElementsTab(), GlobalStrings.elementPanelString);
-        tabs.add(new ClassesSetUp(), GlobalStrings.classesPanelString);
-        tabs.add(new Plan(), GlobalStrings.planForStudPanelString);
-        tabs.add(new TeacherSchedule(), GlobalStrings.planForTeachPanelString);
-        tabs.add(new PreSchedule(), GlobalStrings.prePlanPanelString);
-        tabs.add(new Proparties(), GlobalStrings.propPanelString);
+        tabs.add(new MainTab(), GlobalStrings.mainPanelString);
+        tabs.add(new ElementSetupTab(), GlobalStrings.elementPanelString);
+        tabs.add(new ClassesSetupTab(), GlobalStrings.classesPanelString);
+        tabs.add(new StudentScheduleTab(), GlobalStrings.planForStudPanelString);
+        tabs.add(new TeacherScheduleTab(), GlobalStrings.planForTeachPanelString);
+        tabs.add(new PreScheduleTab(), GlobalStrings.prePlanPanelString);
+        tabs.add(new CleanupToolTab(), GlobalStrings.cleanupPanelString);
 
         //Tabs hot keys
         tabs.setMnemonicAt(0, KeyEvent.VK_M);
@@ -98,14 +106,16 @@ public class MainFrame extends JFrame implements ActionListener {
         tabs.setMnemonicAt(3, KeyEvent.VK_S);
         tabs.setMnemonicAt(4, KeyEvent.VK_T);
         tabs.setMnemonicAt(5, KeyEvent.VK_S);
-        tabs.setMnemonicAt(6, KeyEvent.VK_P);
+         tabs.setMnemonicAt(6, KeyEvent.VK_P);
 
         setupTabTraversalKeys(tabs);//Tabs rottation
 
-        tabs.addChangeListener(new ChangeListener() {
+        tabs.addChangeListener(new ChangeListener()
+        {
 
             @Override
-            public void stateChanged(ChangeEvent e) {
+            public void stateChanged(ChangeEvent e)
+            {
                 refresh();
             }
         }); // refreshing certein componened, based on what is selected
@@ -121,6 +131,8 @@ public class MainFrame extends JFrame implements ActionListener {
         saveAs = new WebMenuItem(GlobalStrings.saveAsString);
         saveAs.addActionListener(this);
         saveAs.setToolTipText(GlobalStrings.saveAsToolTipString);
+        saveToPdf = new WebMenuItem(GlobalStrings.saveToPdfString);
+        saveToPdf.addActionListener(this);
         laod = new WebMenuItem(GlobalStrings.loadString);
         laod.addActionListener(this);
         laod.setToolTipText(GlobalStrings.loadToolTipString);
@@ -131,15 +143,44 @@ public class MainFrame extends JFrame implements ActionListener {
         fileMenu.add(saveAs);
         fileMenu.add(laod);
         fileMenu.add(new WebSeparator());
+        fileMenu.add(saveToPdf);
+        fileMenu.add(new WebSeparator());
         fileMenu.add(exit);
         menuBar.add(fileMenu);
 
         //Settings Menue Code
         WebMenu settingsMenu = new WebMenu(GlobalStrings.settingsString);
         shuffle = new WebCheckBoxMenuItem(GlobalStrings.shuffleString);
-        shuffle.addActionListener(this);
+        shuffle.addActionListener(event ->
+        {
+            GlobalSettings.shuffling = shuffle.isSelected();
+        });
         shuffle.setToolTipText(GlobalStrings.shuffleToolTipString);
         settingsMenu.add(shuffle);
+        harndesSort = new WebCheckBoxMenuItem(GlobalStrings.hardesSortString);
+        harndesSort.addActionListener(event ->
+        {
+            GlobalSettings.hardnesSort = harndesSort.isSelected();
+        });
+        harndesSort.setToolTipText(GlobalStrings.hardesSortStringToolTipString);
+        settingsMenu.add(harndesSort);
+
+        complateGeneration = new WebCheckBoxMenuItem(GlobalStrings.complateGeneration);
+        harndesSort.addActionListener(event ->
+        {
+            GlobalSettings.complateGeneration = complateGeneration.isSelected();
+        });
+        complateGeneration.setToolTipText(GlobalStrings.complateGenerationToolTipString);
+        settingsMenu.add(complateGeneration);
+
+        mistakeCheckerSkip = new WebCheckBoxMenuItem(GlobalStrings.mistakeCheckerSkip);
+        mistakeCheckerSkip.addActionListener(event ->
+        {
+            GlobalSettings.mistakeCheckerSkip = mistakeCheckerSkip.isSelected();
+        });
+        mistakeCheckerSkip.setToolTipText(GlobalStrings.mistakeCheckerSkipToolTipString);
+        settingsMenu.add(mistakeCheckerSkip);
+
         menuBar.add(settingsMenu);
 
         //GUI menue
@@ -160,7 +201,8 @@ public class MainFrame extends JFrame implements ActionListener {
 
     }
 
-    private static void setupTabTraversalKeys(JTabbedPane tabbedPane) {
+    private static void setupTabTraversalKeys(JTabbedPane tabbedPane)
+    {
         KeyStroke ctrlTab = KeyStroke.getKeyStroke("ctrl TAB");
         KeyStroke ctrlShiftTab = KeyStroke.getKeyStroke("ctrl shift TAB");
 
@@ -180,89 +222,120 @@ public class MainFrame extends JFrame implements ActionListener {
         inputMap.put(ctrlShiftTab, "navigatePrevious");
     }
 
-    private static void setUIFont(javax.swing.plaf.FontUIResource f) {
+    private static void setUIFont(javax.swing.plaf.FontUIResource f)
+    {
         java.util.Enumeration keys = UIManager.getDefaults().keys();
-        while (keys.hasMoreElements()) {
+        while (keys.hasMoreElements())
+        {
             Object key = keys.nextElement();
             Object value = UIManager.get(key);
-            if (value instanceof javax.swing.plaf.FontUIResource) {
+            if (value instanceof javax.swing.plaf.FontUIResource)
+            {
                 UIManager.put(key, f);
             }
         }
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource().equals(exit)) {
+    public void actionPerformed(ActionEvent e)
+    {
+        if (e.getSource().equals(exit))
+        {
             System.exit(0);
-        } else if (e.getSource().equals(saveAs)) {
+        } else if (e.getSource().equals(saveAs))
+        {
             JFileChooser chooser = new JFileChooser();
-            chooser.setFont(new Font("SansSerif", Font.ITALIC | Font.BOLD, 15));
+            chooser.setFont(new Font("SansSerif", Font.ITALIC | Font.BOLD, 10));
             chooser.setSelectedFile(new File("School_set_up_" + System.currentTimeMillis() / 1000 + ".rsr"));
-            if (chooser.showSaveDialog(this) == chooser.APPROVE_OPTION) {
+            if (chooser.showSaveDialog(this) == chooser.APPROVE_OPTION)
+            {
                 SavingLoadingSystem.saveGlobalSpace(chooser.getSelectedFile());
             }
-        } else if (e.getSource().equals(save)) {
-            if (GlobalSpace.openeFile != null) {
+        } else if (e.getSource().equals(save))
+        {
+            if (GlobalSpace.openeFile != null)
+            {
                 SavingLoadingSystem.saveGlobalSpace(GlobalSpace.openeFile);
                 return;
             }
-        } else if (e.getSource().equals(laod)) {
+        } else if (e.getSource().equals(laod))
+        {
             JFileChooser chooser = new JFileChooser();
-            chooser.setFileFilter(new FileFilter() {
+            chooser.setFileFilter(new FileFilter()
+            {
 
                 @Override
-                public boolean accept(File f) {
+                public boolean accept(File f)
+                {
                     return f.getAbsolutePath().endsWith(".rsr") || f.isDirectory();
                 }
 
                 @Override
-                public String getDescription() {
+                public String getDescription()
+                {
                     return "";
                 }
             });
-            if (chooser.showOpenDialog(this) == chooser.APPROVE_OPTION) {
+            if (chooser.showOpenDialog(this) == chooser.APPROVE_OPTION)
+            {
                 SavingLoadingSystem.loadGlobalSpace(chooser.getSelectedFile());
                 GlobalSpace.openeFile = chooser.getSelectedFile();
             }
             refresh();
             repaint();
-        } else if (e.getSource().equals(shuffle)) {
-            Settings.shuffling = shuffle.isSelected();
-
-        } else if (e.getSource().equals(image)) {
+        } else if (e.getSource().equals(image))
+        {
             GUIControll.renderLogoImage = image.isSelected();
             repaint();
-        } else if (e.getSource().equals(gradient)) {
+        } else if (e.getSource().equals(gradient))
+        {
             GUIControll.renderGredient = gradient.isSelected();
             repaint();
+        } else if (e.getSource().equals(saveToPdf))
+        {
+            JFileChooser chooser = new JFileChooser();
+            chooser.setFont(new Font("SansSerif", Font.ITALIC | Font.BOLD, 10));
+            chooser.setSelectedFile(new File("School_Schadule_" + System.currentTimeMillis() / 1000 + ".pdf"));
+            if (chooser.showSaveDialog(this) == chooser.APPROVE_OPTION)
+            {
+                try
+                {
+                    SavingLoadingSystem.saveClassesScheduleToPdf(
+                            new File(chooser.getSelectedFile().getCanonicalPath() + ".pdf"));
+                } catch (IOException ex)
+                {
+                    Logger.getLogger(StudentScheduleTab.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
     }
 
-    private void refresh() {
+    private void refresh()
+    {
         gradient.setSelected(GUIControll.renderGredient);
         image.setSelected(GUIControll.renderLogoImage);
-        switch (tabs.getSelectedIndex()) {
+        switch (tabs.getSelectedIndex())
+        {
             case 0:
-                ((ControlPanel) tabs.getSelectedComponent()).refresh();
+                ((MainTab) tabs.getSelectedComponent()).refresh();
                 break;
             case 1:
-                ((ElementsTab) tabs.getSelectedComponent()).refresh();
+                ((ElementSetupTab) tabs.getSelectedComponent()).refresh();
                 break;
             case 2:
-                ((ClassesSetUp) tabs.getSelectedComponent()).refresh();
+                ((ClassesSetupTab) tabs.getSelectedComponent()).refresh();
                 break;
             case 3:
-                ((Plan) tabs.getSelectedComponent()).refresh();
+                ((StudentScheduleTab) tabs.getSelectedComponent()).refresh();
                 break;
             case 4:
-                ((TeacherSchedule) tabs.getSelectedComponent()).refresh();
+                ((TeacherScheduleTab) tabs.getSelectedComponent()).refresh();
                 break;
             case 5:
-                ((PreSchedule) tabs.getSelectedComponent()).refresh();
+                ((PreScheduleTab) tabs.getSelectedComponent()).refresh();
                 break;
             case 6:
-                ((Proparties) tabs.getSelectedComponent()).refresh();
+                ((CleanupToolTab) tabs.getSelectedComponent()).refresh();
                 break;
         }
     }

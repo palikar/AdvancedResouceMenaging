@@ -178,6 +178,13 @@ public class WeekTable extends JTable
         this.valueChanged = ac;
     }
 
+    public void select(Point p)
+    {
+        customSelection[p.x][p.y] = true;
+        customColors[p.x][p.y] = Colors.weekTableEnabledColor;
+        tableChanged(new TableModelEvent(getModel()));
+    }
+
     public ArrayList<Point> getSelected()
     {
         ArrayList<Point> list = new ArrayList<>();

@@ -23,10 +23,13 @@ import javax.swing.SwingUtilities;
  *
  * @author Stanisalv
  */
-public class AdvancedResouceMenaging {
+public class AdvancedResouceMenaging
+{
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
+    public static void main(String[] args)
+    {
+        SwingUtilities.invokeLater(() ->
+        {
             MainFrame mainFrame = new MainFrame();
         });
 

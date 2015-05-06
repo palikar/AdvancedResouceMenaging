@@ -26,31 +26,37 @@ import java.util.Map;
  *
  * @author Stanisalv
  */
-public class ClassNode {
+public class ClassNode
+{
 
     ArrayList<DayNode> days;
-    ArrayList<HourNode> ndoes;
     String name;
     Map<SubjectPlaceHolder, Integer> subjectsPlan;
     Map<SubjectPlaceHolder, Integer> currentOccurence;
     Map<String, Object> properties;
 
-    public ClassNode(String name) {
+    public ClassNode(String name)
+    {
         days = new ArrayList<>();
         subjectsPlan = new HashMap<>();
         currentOccurence = new HashMap<>();
         properties = new HashMap<>();
         this.name = name;
 
-        for (int i = 0; i < 5; i++) {
-            days.add(new DayNode());
+        for (int i = 0; i < 5; i++)
+        {
+            days.add(new DayNode(i));
         }
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 7; j++) {
-                if (i != 4) {
+        for (int i = 0; i < 5; i++)
+        {
+            for (int j = 0; j < 7; j++)
+            {
+                if (i != 4)
+                {
                     days.get(i).hours.get(j).nextDayConnection = days.get(i + 1);
                 }
-                if (i != 0) {
+                if (i != 0)
+                {
                     days.get(i).hours.get(j).prevDayConnection = days.get(i - 1);
                 }
                 days.get(i).hours.get(j).sameDayConnection = days.get(i);
@@ -58,55 +64,71 @@ public class ClassNode {
         }
     }
 
-    public void addOccurence(SubjectPlaceHolder sub) {
+    public void addOccurence(SubjectPlaceHolder sub)
+    {
         currentOccurence.put(sub, currentOccurence.get(sub).intValue() + 1);
     }
 
-    void removeOccurence(SubjectPlaceHolder sub) {
+    void removeOccurence(SubjectPlaceHolder sub)
+    {
         currentOccurence.put(sub, currentOccurence.get(sub).intValue() - 1);
 
     }
 
-    public boolean complateConditons(HourNode node) {
+    public boolean complateConditons(HourNode node)
+    {
 
         return true;
     }
 
-    public boolean isReady() {
+    public boolean isReady()
+    {
         Object keys[] = subjectsPlan.keySet().toArray();
-        for (int i = 0; i < keys.length; i++) {
-            if (subjectsPlan.get(keys[i]).intValue() != currentOccurence.get(keys[i])) {
+        for (int i = 0; i < keys.length; i++)
+        {
+            if (subjectsPlan.get(keys[i]).intValue() != currentOccurence.get(keys[i]))
+            {
                 return false;
             }
         }
         return true;
     }
 
-    public int getOccurance(SubjectPlaceHolder sub) {
+    public int getOccurance(SubjectPlaceHolder sub)
+    {
         return currentOccurence.get(sub).intValue();
     }
 
-    public int getSubjectPlan(SubjectPlaceHolder sub) {
+    public int getSubjectPlan(SubjectPlaceHolder sub)
+    {
         return subjectsPlan.get(sub).intValue();
     }
 
-    public void addSubject(SubjectPlaceHolder sub, int times) {
+    public void addSubject(SubjectPlaceHolder sub, int times)
+    {
         subjectsPlan.put(sub, times);
         currentOccurence.put(sub, 0);
-        for (int j = 0; j < days.size(); j++) {
-            for (int k = 0; k < days.get(j).hours.size(); k++) {
+        for (int j = 0; j < days.size(); j++)
+        {
+            for (int k = 0; k < days.get(j).hours.size(); k++)
+            {
                 days.get(j).hours.get(k).domain.add(sub);
 
             }
         }
     }
 
-    public void addCondition(ConditionDescription con) {
-        switch (con.getCode()) {
+    public void addCondition(ConditionDescription con)
+    {
+        switch (con.getCode())
+        {
             case ConditionCodeList.mustBeConsecitiveConditionCode:
-                for (int i = 0; i < 5; i++) {
-                    for (int j = 0; j < 7; j++) {
-                        if (con.getDaysEnebled()[i][j] == 1) {
+                for (int i = 0; i < 5; i++)
+                {
+                    for (int j = 0; j < 7; j++)
+                    {
+                        if (con.getDaysEnebled()[i][j] == 1)
+                        {
                             days.get(i).getHours().get(j).setConsecitiveCondition(con.getSubs().get(0));
                         }
                     }
@@ -115,32 +137,48 @@ public class ClassNode {
         }
     }
 
-    public ArrayList<DayNode> getDays() {
+    public ArrayList<DayNode> getDays()
+    {
         return days;
     }
 
-    public ArrayList<HourNode> getNdoes() {
-        return ndoes;
-    }
-
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
 
-    public Map<SubjectPlaceHolder, Integer> getSubjectsPlan() {
+    public Map<SubjectPlaceHolder, Integer> getSubjectsPlan()
+    {
         return subjectsPlan;
     }
 
-    public Map<SubjectPlaceHolder, Integer> getCurrentOccurence() {
+    public Map<SubjectPlaceHolder, Integer> getCurrentOccurence()
+    {
         return currentOccurence;
     }
 
-    public Map<String, Object> getProperties() {
+    public Map<String, Object> getProperties()
+    {
         return properties;
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj)
+    {
         return ((ClassNode) obj).name.equals(this.name);
     }
+
+    public ArrayList<HourNode> getHours()
+    {
+        ArrayList<HourNode> list = new ArrayList<>();
+        for (int i = 0; i < 7; i++)
+        {
+            for (int j = 0; j < 5; j++)
+            {
+                list.add(days.get(j).hours.get(i));
+            }
+        }
+        return list;
+    }
+
 }

@@ -39,7 +39,7 @@ public class GUIElements {
 
     public static final Border defaultBorder = BorderFactory.createLineBorder(Colors.bordersColor, 1);
     public static final Border listBorder = BorderFactory.createLineBorder(Color.lightGray, 1, true);
-    public static FontUIResource defaultFont = new FontUIResource("ComicSanMS", Font.ITALIC, 20);
+    public static FontUIResource defaultFont = new FontUIResource("Verdana", Font.ITALIC, 20);
 
     public static JButton getButton(String lable) {
         return new JButton(lable) {

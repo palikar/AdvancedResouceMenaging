@@ -26,48 +26,60 @@ import javax.swing.table.AbstractTableModel;
  *
  * @author Stanisalv
  */
-public class PrePlanTableModel extends AbstractTableModel {
+public class PrePlanTableModel extends AbstractTableModel
+{
 
-    private final String[] COLUMN_NAMES = new String[]{
+    private final String[] COLUMN_NAMES = new String[]
+    {
         GlobalStrings.hourSting,
         GlobalStrings.mondayString,
         GlobalStrings.tuesdaySting,
         GlobalStrings.wendsdaySting,
         GlobalStrings.thusdayString,
-        GlobalStrings.fridayString};
+        GlobalStrings.fridayString
+    };
 
-    public PrePlanTableModel() {
+    public PrePlanTableModel()
+    {
     }
 
     @Override
-    public Class<?> getColumnClass(int columnIndex) {
+    public Class<?> getColumnClass(int columnIndex)
+    {
         return Object.class;
     }
 
     @Override
-    public String getColumnName(int column) {
+    public String getColumnName(int column)
+    {
         return COLUMN_NAMES[column];
     }
 
     @Override
-    public boolean isCellEditable(int rowIndex, int columnIndex) {
+    public boolean isCellEditable(int rowIndex, int columnIndex)
+    {
         return false;
     }
 
     @Override
-    public int getRowCount() {
+    public int getRowCount()
+    {
         return 7;
     }
 
     @Override
-    public int getColumnCount() {
+    public int getColumnCount()
+    {
         return COLUMN_NAMES.length;
     }
 
     @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
-        if (columnIndex == 0) {
-            switch (rowIndex) {
+    public Object getValueAt(int rowIndex, int columnIndex)
+    {
+        if (columnIndex == 0)
+        {
+            switch (rowIndex)
+            {
                 case 0:
                     return new JLabel("I");
                 case 1:
@@ -83,9 +95,11 @@ public class PrePlanTableModel extends AbstractTableModel {
                 case 6:
                     return new JLabel("VII");
             }
-        } else {
-            if (!TableControl.selectedClass.equals("")) {
-                return GlobalSpace.classController.schedules.get(TableControl.selectedClass)[columnIndex - 1][rowIndex];
+        } else
+        {
+            if (!TableControl.selectedClass.equals(""))
+            {
+                return GlobalSpace.classController.getClasses().get(TableControl.selectedClass).getSchedule()[columnIndex - 1][rowIndex];
             }
         }
         return new SubjectPlaceHolder();

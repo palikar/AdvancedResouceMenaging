@@ -16,13 +16,12 @@
  */
 package advancedresoucemenaging.dataHandling;
 
-import javax.swing.Action;
-
 /**
  *
  * @author Stanisalv
  */
-public class GlobalStrings {
+public class GlobalStrings
+{
 
     public static String teachersString = "Учители:";
     public static String subjectsString = "Предмети:";
@@ -30,14 +29,14 @@ public class GlobalStrings {
     public static String timesPerWeekInClassSetUpPanel = "Часове в седмицата:";
     public static String tooManySameSubsInWeek = "Твърде много часове в седмицата";
     public static String sameSubInAnotherClass = "На това място има същия предмет в друг клас";
-    public static String titleString = "Урпавление на ресурси в училище";
-    public static String mainPanelString = "Основен Панел";
+    public static String titleString = "Управление на ресурси в училище";
+    public static String mainPanelString = "Основен панел";
     public static String elementPanelString = "Елементи";
     public static String classesPanelString = "Класове";
     public static String planForStudPanelString = "Програма за класове";
     public static String planForTeachPanelString = "Програма за учители";
-    public static String prePlanPanelString = "Предварителна Програма";
-    public static String propPanelString = "Свойства на класове";
+    public static String prePlanPanelString = "Предварителна програма";
+    public static String cleanupPanelString = "Грешки в разписанието";
     public static String fileString = "Файл";
     public static String saveString = "Запази";
     public static String saveAsString = "Запази като";
@@ -54,7 +53,7 @@ public class GlobalStrings {
     public static String nameOfClassString = "Име на класа:";
     public static String subjectString = "Предмет:";
     public static String nameOfTeacherString = "Име на учител:";
-    public static String subsOfClassString = "Предмети на класаа:";
+    public static String subsOfClassString = "Предмети на класа:";
     public static String addingSubjectToClass = "Добавяне на предмет към класа";
     public static String teacherString = "Учител:";
     public static String classesPerWeek = "Часове на седмица:";
@@ -63,9 +62,9 @@ public class GlobalStrings {
     public static String makeString = "Изготви";
     public static String clearAllString = "Изчисти всичко";
     public static String clearClassString = "Изчисти класа";
-    public static String propartiesSting = "Свойства:";
+    public static String simpleTablePlanSting = "Прорама:";
     public static String parametarsString = "Параметри:";
-    public static String newPorpartyString = "Нов свойство";
+    public static String newPorpartyString = "Ново свойство";
     public static String errorSting = "Грешка";
     public static String typeString = "Тип";
     public static String noSelectedClass = "Няма избран клас";
@@ -88,4 +87,12 @@ public class GlobalStrings {
     public static String guiMenuString = "Оформление";
     public static String renderImageString = "Показвай изображение";
     public static String renderGredientString = "Показвай градиент";
+    public static String saveToPdfString = "Запази в PDF файл";
+    public static String hardesSortString = "Подреждане по трудност";
+    public static String hardesSortStringToolTipString = "Програмата ще се стреми да постави предметите с по-голяма трудност в началото на деня";
+    public static String complateGeneration = "Пълно изчерпане";
+    public static String complateGenerationToolTipString = "Програмата ще се опита да генерира разписанието на всички класове на веднъж";
+    public static String mistakeCheckerSkip = "Презкачане на прогверката за грешки";
+    public static String mistakeCheckerSkipToolTipString = "Програмата няма да провери първоначално изготвеното разписание за грешки";
+    public static String alwaysOnTopString = "Винаги отгоре";
 }

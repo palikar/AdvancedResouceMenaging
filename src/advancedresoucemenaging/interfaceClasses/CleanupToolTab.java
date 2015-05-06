@@ -44,6 +44,7 @@ import javax.swing.JList;
 import javax.swing.JMenuBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.event.TableModelEvent;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -60,7 +61,8 @@ public class CleanupToolTab extends GradientPanel
     JLabel teacher, subject;
     JFrame newFrame;
     boolean fullOpened = false;
-    private StudentPlanTableModel model;
+    private StudentPlanTableModel model = null;
+    private JTable fullTable = null;
 
     public CleanupToolTab()
     {
@@ -74,18 +76,7 @@ public class CleanupToolTab extends GradientPanel
         classes = GUIElements.getList(classesModel);
         classes.addListSelectionListener(e ->
         {
-            simpleTable.unselectAll();
-            if (fullOpened)
-            {
-                int index = classes.getSelectedIndex();
-                if (index == -1)
-                {
-                    return;
-                }
-                advancedresoucemenaging.dataHandling.Class clas = GlobalSpace.classController.getClasses().get(classes.getSelectedValue());
-                model.setSelected(clas.getName());
-                model.fireTableDataChanged();
-            }
+            changeTables();
         });
 
         JScrollPane sp2 = new JScrollPane(classes);
@@ -100,37 +91,26 @@ public class CleanupToolTab extends GradientPanel
         {
             showFullTable();
         });
-        add(showFull, "gapleft 0.5cm,align right,aligny top,wrap 0.5cm");
+        add(showFull, "gapleft 0.5cm,align left,aligny top,wrap 0.5cm");
 
         add(subject = new JLabel(GlobalStrings.subjectString), "gaptop 0.5cm, gapleft 0.5cm, wrap 0.25cm,aligny top");
         add(teacher = new JLabel(GlobalStrings.teacherString), "gapleft 0.5cm,wrap 0.25cm,aligny top");
 
         set = GUIElements.getButton("Постави");
+        set.addActionListener((e) ->
+        {
+            setSubject();
+        });
         add(set, "gapleft 0.5cm,skip,split");
         swap = GUIElements.getButton("Размени");
+        swap.addActionListener((e) ->
+        {
+        });
         add(swap, "gapleft 0.5cm");
         remove = GUIElements.getButton("Премахни");
         remove.addActionListener((e) ->
         {
-            int index = classes.getSelectedIndex();
-            if (index == -1)
-            {
-                return;
-            }
-            ArrayList<Point> selected = simpleTable.getSelected();
-            selected.forEach((Point p) ->
-            {
-                GlobalSpace.classController.getClasses().get(classes.getSelectedValue())
-                        .getSchedule()[p.x][p.y] = SubjectPlaceHolder.empty;
-
-            });
-            if (fullOpened)
-            {
-                model.fireTableDataChanged();
-            }
-            teacher.setText(GlobalStrings.teacherString);
-            subject.setText(GlobalStrings.subjectString);
-            simpleTable.unselectAll();
+            removeSubject();
 
         });
         add(remove, "gapleft 0.5cm");
@@ -138,21 +118,7 @@ public class CleanupToolTab extends GradientPanel
         simpleTable.setValueChangeAction(() ->
         {
 
-            int index = classes.getSelectedIndex();
-            if (index == -1)
-            {
-                return;
-            }
-            SubjectPlaceHolder sub = GlobalSpace.classController.getClasses().get(classes.getSelectedValue())
-                    .getSchedule()[simpleTable.getLastSelected().x][simpleTable.getLastSelected().y];
-            if (sub.equals(SubjectPlaceHolder.empty))
-            {
-                teacher.setText(GlobalStrings.teacherString);
-                subject.setText(GlobalStrings.subjectString);
-                return;
-            }
-            teacher.setText(GlobalStrings.teacherString + sub.getTeacher());
-            subject.setText(GlobalStrings.subjectString + sub.getSubject());
+            changeLables();
 
         });
 
@@ -160,8 +126,74 @@ public class CleanupToolTab extends GradientPanel
 
     }
 
+    private void changeTables()
+    {
+        simpleTable.unselectAll();
+        if (fullOpened)
+        {
+            int index = classes.getSelectedIndex();
+            if (index == -1)
+            {
+                return;
+            }
+            advancedresoucemenaging.dataHandling.Class clas = GlobalSpace.classController.getClasses().get(classes.getSelectedValue());
+            model.setSelected(clas.getName());
+            model.fireTableDataChanged();
+        }
+    }
+
+    private void changeLables()
+    {
+        int index = classes.getSelectedIndex();
+        if (index == -1)
+        {
+            return;
+        }
+        SubjectPlaceHolder sub = GlobalSpace.classController.getClasses().get(classes.getSelectedValue())
+                .getSchedule()[simpleTable.getLastSelected().x][simpleTable.getLastSelected().y];
+        if (sub.equals(SubjectPlaceHolder.empty))
+        {
+            teacher.setText(GlobalStrings.teacherString);
+            subject.setText(GlobalStrings.subjectString);
+            return;
+        }
+        teacher.setText(GlobalStrings.teacherString + sub.getTeacher());
+        subject.setText(GlobalStrings.subjectString + sub.getSubject());
+        if (fullOpened)
+        {
+            fullTable.changeSelection(simpleTable.getLastSelected().y, simpleTable.getLastSelected().x + 1, false, false);
+        }
+    }
+
+    private void removeSubject()
+    {
+        int index = classes.getSelectedIndex();
+        if (index == -1)
+        {
+            return;
+        }
+        ArrayList<Point> selected = simpleTable.getSelected();
+        selected.forEach((Point p) ->
+        {
+            GlobalSpace.classController.getClasses().get(classes.getSelectedValue())
+                    .getSchedule()[p.x][p.y] = SubjectPlaceHolder.empty;
+            
+        });
+        if (fullOpened)
+        {
+            model.fireTableDataChanged();
+        }
+        teacher.setText(GlobalStrings.teacherString);
+        subject.setText(GlobalStrings.subjectString);
+        simpleTable.unselectAll();
+    }
+
     private void showFullTable()
     {
+        if (fullOpened)
+        {
+            return;
+        }
         int index = classes.getSelectedIndex();
         if (index == -1)
         {
@@ -171,43 +203,43 @@ public class CleanupToolTab extends GradientPanel
         newFrame = new JFrame("Програма на " + clas.getName());
         model = new StudentPlanTableModel();
         model.setSelected(clas.getName());
-        JTable table = new JTable(model);
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        table.setRowSelectionAllowed(true);
-        table.setFillsViewportHeight(true);
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        table.setRowHeight(60);
-        table.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 17));
-        table.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
-        table.getTableHeader().setReorderingAllowed(false);
-        table.getTableHeader().setResizingAllowed(false);
-        table.setBorder(GUIElements.defaultBorder);
-        table.setGridColor(Colors.tableGridColor);
-        table.setSelectionBackground(Colors.tableSelectionBackGround);
-        table.getTableHeader().setForeground(Colors.tableHeaderColor);
+        fullTable = new JTable(model);
+        fullTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        fullTable.setRowSelectionAllowed(true);
+        fullTable.setFillsViewportHeight(true);
+        fullTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        fullTable.setRowHeight(60);
+        fullTable.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 17));
+        fullTable.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
+        fullTable.getTableHeader().setReorderingAllowed(false);
+        fullTable.getTableHeader().setResizingAllowed(false);
+        fullTable.setBorder(GUIElements.defaultBorder);
+        fullTable.setGridColor(Colors.tableGridColor);
+        fullTable.setSelectionBackground(Colors.tableSelectionBackGround);
+        fullTable.getTableHeader().setForeground(Colors.tableHeaderColor);
 
-        table.setCellSelectionEnabled(true);
+        fullTable.setCellSelectionEnabled(true);
 
-        table.getColumnModel().getColumn(0).setPreferredWidth(45);
-        table.getColumnModel().getColumn(1).setPreferredWidth(137);
-        table.getColumnModel().getColumn(2).setPreferredWidth(138);
-        table.getColumnModel().getColumn(3).setPreferredWidth(138);
-        table.getColumnModel().getColumn(4).setPreferredWidth(138);
-        table.getColumnModel().getColumn(5).setPreferredWidth(138);
+        fullTable.getColumnModel().getColumn(0).setPreferredWidth(45);
+        fullTable.getColumnModel().getColumn(1).setPreferredWidth(137);
+        fullTable.getColumnModel().getColumn(2).setPreferredWidth(138);
+        fullTable.getColumnModel().getColumn(3).setPreferredWidth(138);
+        fullTable.getColumnModel().getColumn(4).setPreferredWidth(138);
+        fullTable.getColumnModel().getColumn(5).setPreferredWidth(138);
 
-        table.getColumnModel().getColumn(0).setCellRenderer(new JLableCellRenderer());
-        table.getColumnModel().getColumn(1).setCellRenderer(new SubjectCellRenderer());
-        table.getColumnModel().getColumn(2).setCellRenderer(new SubjectCellRenderer());
-        table.getColumnModel().getColumn(3).setCellRenderer(new SubjectCellRenderer());
-        table.getColumnModel().getColumn(4).setCellRenderer(new SubjectCellRenderer());
-        table.getColumnModel().getColumn(5).setCellRenderer(new SubjectCellRenderer());
+        fullTable.getColumnModel().getColumn(0).setCellRenderer(new JLableCellRenderer());
+        fullTable.getColumnModel().getColumn(1).setCellRenderer(new SubjectCellRenderer());
+        fullTable.getColumnModel().getColumn(2).setCellRenderer(new SubjectCellRenderer());
+        fullTable.getColumnModel().getColumn(3).setCellRenderer(new SubjectCellRenderer());
+        fullTable.getColumnModel().getColumn(4).setCellRenderer(new SubjectCellRenderer());
+        fullTable.getColumnModel().getColumn(5).setCellRenderer(new SubjectCellRenderer());
 
-        JScrollPane sp = new JScrollPane(table);
+        JScrollPane sp = new JScrollPane(fullTable);
         sp.setPreferredSize(new Dimension(736, 456));
         newFrame.add(sp);
         newFrame.pack();
         newFrame.setResizable(false);
-        newFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        newFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JMenuBar bar = new WebMenuBar()
         //<editor-fold defaultstate="collapsed" desc="Dont look">
@@ -244,6 +276,54 @@ public class CleanupToolTab extends GradientPanel
             {
                 super.windowClosed(e); //To change body of generated methods, choose Tools | Templates.
                 fullOpened = false;
+                fullTable = null;
+                model = null;
+            }
+
+        });
+
+    }
+
+    private void setSubject()
+    {
+
+        int index = classes.getSelectedIndex();
+        if (index == -1)
+        {
+            return;
+        }
+        if (simpleTable.getSelected().isEmpty())
+        {
+            return;
+        }
+        simpleTable.unselectAll();
+        simpleTable.select(simpleTable.getLastSelected());
+        SetSubjectFrame settingFrame = new SetSubjectFrame(GlobalSpace.classController.getClasses().get(classes.getSelectedValue()).getSubjects().toArray(),
+                simpleTable.getLastSelected().x, simpleTable.getLastSelected().y,
+                classes.getSelectedValue().toString());
+        settingFrame.overrideLimitations();
+        settingFrame.addWindowListener(new WindowAdapter()
+        {
+
+            @Override
+            public void windowClosed(WindowEvent e)
+            {
+                super.windowClosed(e); //To change body of generated methods, choose Tools | Templates.
+
+                SubjectPlaceHolder sub = GlobalSpace.classController.getClasses().get(classes.getSelectedValue())
+                        .getSchedule()[simpleTable.getLastSelected().x][simpleTable.getLastSelected().y];
+                if (sub.equals(SubjectPlaceHolder.empty))
+                {
+                    teacher.setText(GlobalStrings.teacherString);
+                    subject.setText(GlobalStrings.subjectString);
+                    return;
+                }
+                teacher.setText(GlobalStrings.teacherString + sub.getTeacher());
+                subject.setText(GlobalStrings.subjectString + sub.getSubject());
+                if (fullOpened)
+                {
+                    fullTable.tableChanged(new TableModelEvent(fullTable.getModel()));
+                }
             }
 
         });

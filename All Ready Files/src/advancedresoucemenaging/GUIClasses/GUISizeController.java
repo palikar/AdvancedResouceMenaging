@@ -20,8 +20,8 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 
 /**
-
- @author Stanisalv
+ *
+ * @author Stanisalv
  */
 public class GUISizeController {
 
@@ -31,20 +31,26 @@ public class GUISizeController {
     public static double heightRatio = 1, widthRatio = 1;
 
     public static Dimension getPrefferedSize() {
-	return prefferedSize == null ? calculatePrefferedSize() : prefferedSize;
+        return prefferedSize == null ? calculatePrefferedSize() : prefferedSize;
     }
 
     private static Dimension calculatePrefferedSize() {
-	Dimension screenMaxSize = Toolkit.getDefaultToolkit().getScreenSize();
-	prefferedSize = new Dimension(intendedSize);
+        Dimension screenMaxSize = Toolkit.getDefaultToolkit().getScreenSize();
+        prefferedSize = new Dimension(intendedSize);
 
-	prefferedSize.height = (int) Math.round((double) intendedSize.height * ((double) screenMaxSize.height / (double) intendedScreenSize.height));
-	heightRatio = (double) prefferedSize.height / (double) intendedSize.height;
+      //  if (screenMaxSize.height < intendedScreenSize.height) {
+        //       prefferedSize.height = (int) Math.round((double) intendedSize.height * ((double) screenMaxSize.height / (double) intendedScreenSize.height));
+        //        heightRatio = (double) prefferedSize.height / (double) intendedSize.height;
+        // } else {
+        prefferedSize.height = intendedSize.height;
+       // }
 
-
-	prefferedSize.width = (int) Math.round((double) intendedSize.width * ((double) screenMaxSize.width / (double) intendedScreenSize.width));
-	widthRatio = (double) prefferedSize.width / (double) intendedSize.width;
-
-	return prefferedSize;
+        //if (screenMaxSize.width < intendedScreenSize.width) {
+        //   prefferedSize.width = (int) Math.round((double) intendedSize.width * ((double) screenMaxSize.width / (double) intendedScreenSize.width));
+        //  widthRatio = (double) prefferedSize.width / (double) intendedSize.width;
+        //} else {
+        prefferedSize.width = intendedSize.width;
+        // }
+        return prefferedSize;
     }
 }

@@ -16,7 +16,7 @@
  */
 package advancedresoucemenaging.algStuff;
 
-import advancedresoucemenaging.dataHandling.Settings;
+import advancedresoucemenaging.dataHandling.GlobalSettings;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ListIterator;
@@ -25,62 +25,93 @@ import java.util.ListIterator;
  *
  * @author Stanisalv
  */
-public final class Controller {
+public final class Controller
+{
 
     ArrayList<ClassNode> classes;
     ArrayList<HourNode> state;
     boolean shuffling = true;
 
-    public Controller() {
+    public Controller()
+    {
         classes = new ArrayList<>();
         state = new ArrayList<>();
-        shuffling = Settings.shuffling;
+        shuffling = GlobalSettings.shuffling;
     }
 
-    boolean allReady() {
-        for (int i = 0; i < classes.size(); i++) {
-            if (!classes.get(i).isReady()) {
+    boolean allReady()
+    {
+        for (int i = 0; i < classes.size(); i++)
+        {
+            if (!classes.get(i).isReady())
+            {
                 return false;
             }
         }
         return true;
     }
 
-    public boolean assign(ListIterator<HourNode> nodes) {
-        if (allReady()) {
+    public boolean assign(ListIterator<HourNode> nodes)
+    {
+        //  print();
+        if (allReady())
+        {
             return true;
         }
         int index = nodes.nextIndex();
-        if (index == state.size()) {
-            if (allReady()) {
+        if (index == state.size())
+        {
+            if (allReady())
+            {
                 return true;
-            } else {
+            } else
+            {
                 return false;
             }
         }
         HourNode node = state.get(index);
-        if (node.sameClass.isReady() && node.nextClass != null) {
+        if (node.sameClass.isReady() && node.nextClass != null)
+        {
             return assign(state.listIterator(state.indexOf(node.nextClass.days.get(0).hours.get(0))));
         }
-        if (node.isSet()) {
+        if (node.isSet())
+        {
             return assign(state.listIterator(index + 1));
         }
-        for (int i = 0; i < node.domain.size(); i++) {
+        if (node.prevHour != null && !node.prevHour.isSet())
+        {
+            return false;
+        }
+        if (node.domain.size() == 0)
+        {
+            return false;
+        }
+        for (int i = 0; i < node.domain.size(); i++)
+        {
+
             SubjectPlaceHolder sub = node.domain.get(i);
-            if (!node.set(sub)) {
+            node.set(sub);
+            if(checkForHoles()){
                 node.unSet();
                 continue;
             }
-            if (!node.sameClass.isReady()) {
-                if (assign(state.listIterator(index + 1))) {
+
+            if (!node.sameClass.isReady())
+            {
+                if (assign(state.listIterator(index + 1)))
+                {
                     return true;
                 }
-            } else {
-                if (node.nextClass != null) {
-                    if (assign(state.listIterator(state.indexOf(node.nextClass.days.get(0).hours.get(0))))) {
+            } else
+            {
+                if (node.nextClass != null)
+                {
+                    if (assign(state.listIterator(state.indexOf(node.nextClass.days.get(0).hours.get(0)))))
+                    {
                         return true;
                     }
-                } else {
+                } else
+                {
                     return true;
                 }
             }
@@ -89,13 +120,18 @@ public final class Controller {
         return false;
     }
 
-    public void addClass(ClassNode clas) {
+    public void addClass(ClassNode clas)
+    {
         classes.add(clas);
-        if (classes.size() > 1) {
+        if (classes.size() > 1)
+        {
             int lastIndex = classes.size() - 1;
-            for (int i = 0; i < lastIndex; i++) {
-                for (int j = 0; j < 5; j++) {
-                    for (int k = 0; k < 7; k++) {
+            for (int i = 0; i < lastIndex; i++)
+            {
+                for (int j = 0; j < 5; j++)
+                {
+                    for (int k = 0; k < 7; k++)
+                    {
                         classes.get(i).days.get(j).hours.get(k).sameTimeConnection.add(
                                 classes.get(lastIndex).days.get(j).hours.get(k));
                         classes.get(lastIndex).days.get(j).hours.get(k).sameTimeConnection.add(classes.get(i).days.get(j).hours.get(k));
@@ -106,12 +142,16 @@ public final class Controller {
 
     }
 
-    public ArrayList<SubjectPlaceHolder[][]> getData() {
+    public ArrayList<SubjectPlaceHolder[][]> getData()
+    {
         ArrayList<SubjectPlaceHolder[][]> data = new ArrayList<>();
-        for (int i = 0; i < classes.size(); i++) {
+        for (int i = 0; i < classes.size(); i++)
+        {
             SubjectPlaceHolder week[][] = new SubjectPlaceHolder[7][5];
-            for (int j = 0; j < 5; j++) {
-                for (int k = 0; k < 7; k++) {
+            for (int j = 0; j < 5; j++)
+            {
+                for (int k = 0; k < 7; k++)
+                {
                     week[k][j] = classes.get(i).days.get(j).hours.get(k).placeHolder;
                 }
             }
@@ -120,12 +160,16 @@ public final class Controller {
         return data;
     }
 
-    public void print() {
+    public void print()
+    {
         ArrayList<SubjectPlaceHolder[][]> data = getData();
-        for (int i = 0; i < data.size(); i++) {
+        for (int i = 0; i < data.size(); i++)
+        {
             SubjectPlaceHolder[][] week = data.get(i);
-            for (int j = 0; j < week.length; j++) {
-                for (int k = 0; k < week[0].length; k++) {
+            for (int j = 0; j < week.length; j++)
+            {
+                for (int k = 0; k < week[0].length; k++)
+                {
                     Object object = week[j][k].subject;
                     System.out.print(object + "|");
                 }
@@ -137,15 +181,21 @@ public final class Controller {
 
     }
 
-    public void setUpClasses() {
-        for (int i = 0; i < classes.size(); i++) {
-            for (int j = 0; j < 5; j++) {
-                for (int k = 0; k < 7; k++) {
+    public void setUpClasses()
+    {
+        for (int i = 0; i < classes.size(); i++)
+        {
+            for (int j = 0; j < 5; j++)
+            {
+                for (int k = 0; k < 7; k++)
+                {
                     classes.get(i).days.get(j).hours.get(k).sameClass = classes.get(i);
-                    if (i != classes.size() - 1) {
+                    if (i != classes.size() - 1)
+                    {
                         classes.get(i).days.get(j).hours.get(k).nextClass = classes.get(i + 1);
                     }
-                    if (i != 0) {
+                    if (i != 0)
+                    {
                         classes.get(i).days.get(j).hours.get(k).prevClass = classes.get(1 - 1);
                     }
                 }
@@ -154,25 +204,69 @@ public final class Controller {
 
     }
 
-    public void make() {
-        for (int i = 0; i < classes.size(); i++) {
-            for (int j = 0; j < 7; j++) {
-                for (int k = 0; k < 5; k++) {
+    public void make()
+    {
+        for (int i = 0; i < classes.size(); i++)
+        {
+            for (int j = 0; j < 7; j++)
+            {
+                for (int k = 0; k < 5; k++)
+                {
                     state.add(classes.get(i).days.get(k).hours.get(j));
-                    if (shuffling) {
-                        Collections.shuffle(classes.get(i).days.get(k).hours.get(j).domain);
+                    if (GlobalSettings.hardnesSort)
+                    {
+                        classes.get(i).days.get(k).hours.get(j).sortByHardness();
+                    }
+                    if (GlobalSettings.shuffling)
+                    {
+                        classes.get(i).days.get(k).hours.get(j).shuffelDomain(GlobalSettings.hardnesSort);
                     }
                 }
             }
         }
-        assign(state.listIterator());
+        System.out.println("Es hat angefangen");
+        if (!assign(state.listIterator()))
+        {
+            System.out.println("Es ist eine Scheisskoniguration");
+        } else
+        {
+            System.out.println("Das Prozess ist fertig");
+        }
     }
 
-    public ArrayList<ClassNode> getClasses() {
+    private boolean checkForHoles()
+    {
+        for (ClassNode classNode : classes)
+        {
+            for (DayNode dayNode : classNode.days)
+            {
+                for (HourNode hourNode : dayNode.hours)
+                {
+                    if (!hourNode.isSet())
+                    {
+                        if (hourNode.prevHour == null && hourNode.nextHour.isSet())
+                        {
+                            return true;
+                        }
+                        if (hourNode.nextHour != null && (hourNode.nextHour.isSet() && hourNode.prevHour.isSet()))
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+            }
+        }
+        return false;
+    }
+
+    public ArrayList<ClassNode> getClasses()
+    {
         return classes;
     }
 
-    public ArrayList<HourNode> getState() {
+    public ArrayList<HourNode> getState()
+    {
         return state;
     }
 

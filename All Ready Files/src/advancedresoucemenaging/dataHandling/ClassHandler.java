@@ -30,102 +30,93 @@ import java.util.Map;
  *
  * @author Stanisalv
  */
-public class ClassHandler extends Handler {
+public class ClassHandler implements Handler
+{
 
-    public ArrayList<String> classes;
-    public Map<String, ArrayList<SubjectPlaceHolder>> subjects;
-    public Map<String, Map<SubjectPlaceHolder, Integer>> subjectPlan;
-    public Map<String, ArrayList<ConditionDescription>> conditions;
-    public Map<String, SubjectPlaceHolder[][]> schedules;
+    private Map<String, Class> classes;
     public static final SubjectPlaceHolder emptySub = new SubjectPlaceHolder();
 
-    public ClassHandler() {
-        classes = new ArrayList<>();
-        subjectPlan = new HashMap<>();
-        conditions = new HashMap<>();
-        schedules = new HashMap<>();
-        subjects = new HashMap<>();
-    }
-
-    @Override
-    public void add(String name) {
-        classes.add(name);
-        subjectPlan.put(name, new HashMap<SubjectPlaceHolder, Integer>());
-        conditions.put(name, new ArrayList<ConditionDescription>());
-        schedules.put(name, new SubjectPlaceHolder[5][7]);
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 7; j++) {
-                schedules.get(name)[i][j] = new SubjectPlaceHolder();
-            }
-        }
-        subjects.put(name, new ArrayList<SubjectPlaceHolder>());
+    public ClassHandler()
+    {
+        classes = new HashMap<>();
 
     }
 
     @Override
-    public void remove(String name) {
+    public void add(String name)
+    {
+        classes.put(name, new Class(name));
+    }
+
+    @Override
+    public void remove(String name)
+    {
         classes.remove(name);
-        subjectPlan.remove(name);
-        conditions.remove(name);
-        schedules.remove(name);
-    }
-
-    public void clearAllSchedules() {
-        for (int i = 0; i < classes.size(); i++) {
-            clearShcedule(classes.get(i));
-        }
 
     }
 
-    public void clearShcedule(String clas) {
-        SubjectPlaceHolder sub[][] = schedules.get(clas);
-        for (int j = 0; j < sub.length; j++) {
-            for (int k = 0; k < sub[0].length; k++) {
-                if (!sub[j][k].equals(emptySub)) {
-                    sub[j][k] = new SubjectPlaceHolder();
-                }
-            }
+    public void clearAllSchedules()
+    {
+        for (Class clas : classes.values())
+        {
+            clas.clearSchedule();
         }
     }
 
-    public void addSuject(String clas, SubjectPlaceHolder sub, int times) {
-        subjectPlan.get(clas).put(sub, times);
-        subjects.get(clas).add(sub);
+    public void clearShcedule(String clas)
+    {
+        classes.get(clas).clearSchedule();
 
     }
 
-    public void addCondition(String clas, ConditionDescription con) {
-        conditions.get(clas).add(con);
+    public void addSuject(String clas, SubjectPlaceHolder sub, int times)
+    {
+        classes.get(clas).addSubject(sub, times);
+
     }
 
-    public void addCondition(String clas, String line) {
-        conditions.get(clas).add(new ConditionDescription(clas).loadFromString(line));
+    public void addCondition(String clas, ConditionDescription con)
+    {
+
     }
 
-    public void setUpController(Controller controll) {
-        for (int i = 0; i < classes.size(); i++) {
-            String name = classes.get(i);
+    public void addCondition(String clas, String line)
+    {
+    }
+
+    public void setUpController(Controller controll, ArrayList<Class> classes)
+    {
+
+        for (Class clas : classes)
+        {
+
+            String name = clas.getName();
             ClassNode node = new ClassNode(name);
-            Map<SubjectPlaceHolder, Integer> schedule = subjectPlan.get(name);
-            Object keys[] = schedule.keySet().toArray();
-            for (int j = 0; j < keys.length; j++) {
-                int times = schedule.get(keys[j]).intValue();
-                node.addSubject((SubjectPlaceHolder) keys[j], times);
+            for (Map.Entry<SubjectPlaceHolder, Integer> subject : clas.getSubjectPlan().entrySet())
+            {
+                node.addSubject(subject.getKey(), subject.getValue());
             }
 
-            ArrayList<ConditionDescription> listCon = conditions.get(name);
-            for (int j = 0; j < listCon.size(); j++) {
-                node.addCondition(listCon.get(j));
-            }
+            ArrayList<ConditionDescription> listCon = clas.getConditions();
+            listCon.forEach((element) ->
+            {
+                node.addCondition(element);
+            });
             controll.addClass(node);
         }
         controll.setUpClasses();
-        for (int i = 0; i < classes.size(); i++) {
-            SubjectPlaceHolder[][] schedule = schedules.get(classes.get(i));
-            for (int j = 0; j < schedule.length; j++) {
-                for (int k = 0; k < schedule[j].length; k++) {
+        Class[] classArray = new Class[classes.size()];
+        classes.toArray(classArray);
+        for (int i = 0; i < classes.size(); i++)
+        {
+            SubjectPlaceHolder[][] schedule = classArray[i].getSchedule();
+            for (int j = 0; j < schedule.length; j++)
+            {
+                for (int k = 0; k < schedule[j].length; k++)
+                {
                     SubjectPlaceHolder subjectPlaceHolder = schedule[j][k];
-                    if (subjectPlaceHolder != null && !subjectPlaceHolder.equals(emptySub)) {
+                    if (subjectPlaceHolder != null && !subjectPlaceHolder.equals(emptySub))
+                    {
                         controll.getClasses().get(i).getDays().get(j).getHours().get(k).setManual(subjectPlaceHolder);
                     }
                 }
@@ -133,13 +124,17 @@ public class ClassHandler extends Handler {
         }
     }
 
-    public void getReadySchedule(Controller controll) {
-        for (int i = 0; i < controll.getClasses().size(); i++) {
+    public void getReadySchedule(Controller controll)
+    {
+        for (int i = 0; i < controll.getClasses().size(); i++)
+        {
             ClassNode classNode = controll.getClasses().get(i);
-            SubjectPlaceHolder[][] schedule = schedules.get(classNode.getName());
-            for (int j = 0; j < classNode.getDays().size(); j++) {
+            SubjectPlaceHolder[][] schedule = classes.get(classNode.getName()).getSchedule();
+            for (int j = 0; j < classNode.getDays().size(); j++)
+            {
                 DayNode dayNode = classNode.getDays().get(j);
-                for (int k = 0; k < dayNode.getHours().size(); k++) {
+                for (int k = 0; k < dayNode.getHours().size(); k++)
+                {
                     HourNode hourNode = dayNode.getHours().get(k);
                     schedule[j][k].setSubject(hourNode.getPlaceHolder().getSubject());
                     schedule[j][k].setTeacher(hourNode.getPlaceHolder().getTeacher());
@@ -149,9 +144,12 @@ public class ClassHandler extends Handler {
         }
     }
 
-    public String getTeacher(String clas, String sub) {
-        for (SubjectPlaceHolder subject : subjects.get(clas)) {
-            if (subject.getSubject().equals(sub)) {
+    public String getTeacher(String clas, String sub)
+    {
+        for (SubjectPlaceHolder subject : classes.get(clas).getSubjects())
+        {
+            if (subject.getSubject().equals(sub))
+            {
                 return subject.getTeacher();
             }
         }
@@ -159,36 +157,57 @@ public class ClassHandler extends Handler {
     }
 
     @Override
-    public boolean contains(String name) {
-        return classes.contains(name);
+    public boolean contains(String name)
+    {
+        return classes.containsValue(name);
     }
 
-    public String setSubject(String clas, int day, int hour, SubjectPlaceHolder selectedValue) {
-        if (selectedValue.equals(emptySub)) {
-            schedules.get(clas)[day][hour] = selectedValue;
+    public void setSubjectWithNoChecks(String clas, int day, int hour, SubjectPlaceHolder selectedValue)
+    {
+        classes.get(clas).getSchedule()[day][hour] = selectedValue;
+
+    }
+
+    public String setSubject(String clas, int day, int hour, SubjectPlaceHolder selectedValue)
+    {
+        if (selectedValue.equals(emptySub))
+        {
+            classes.get(clas).getSchedule()[day][hour] = selectedValue;
             return null;
         }
-        SubjectPlaceHolder schedule[][] = schedules.get(clas);
+        SubjectPlaceHolder schedule[][] = classes.get(clas).getSchedule();
         int cnt = 1;
-        for (int i = 0; i < schedule.length; i++) {
-            for (int j = 0; j < schedule[0].length; j++) {
+        for (int i = 0; i < schedule.length; i++)
+        {
+            for (int j = 0; j < schedule[0].length; j++)
+            {
                 SubjectPlaceHolder subjectPlaceHolder = schedule[i][j];
-                if (subjectPlaceHolder.equals(selectedValue)) {
+                if (subjectPlaceHolder.equals(selectedValue))
+                {
                     cnt++;
                 }
             }
         }
-        if (cnt > subjectPlan.get(clas).get(selectedValue).intValue()) {
+        if (cnt > classes.get(clas).getSubjectPlan().get(selectedValue))
+        {
             return GlobalStrings.tooManySameSubsInWeek;
         }
-        for (int i = 0; i < classes.size(); i++) {
-            SubjectPlaceHolder sub = schedules.get(classes.get(i))[day][hour];
-            if (!sub.equals(emptySub) && sub.equals(selectedValue)) {
+        for (int i = 0; i < classes.size(); i++)
+        {
+            SubjectPlaceHolder sub = classes.get(clas).getSchedule()[day][hour];
+            if (!sub.equals(emptySub) && sub.equals(selectedValue))
+            {
                 return GlobalStrings.sameSubInAnotherClass;
             }
         }
 
-        schedules.get(clas)[day][hour] = selectedValue;
+        classes.get(clas).getSchedule()[day][hour] = selectedValue;
         return null;
     }
+
+    public Map<String, Class> getClasses()
+    {
+        return classes;
+    }
+
 }

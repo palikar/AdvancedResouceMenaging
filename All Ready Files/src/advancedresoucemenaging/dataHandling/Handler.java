@@ -20,12 +20,12 @@ package advancedresoucemenaging.dataHandling;
  *
  * @author Stanisalv
  */
-public abstract class Handler {
+public interface Handler {
 
-    public abstract void add(String name);
+    public void add(String name);
 
-    public abstract void remove(String name);
+    public void remove(String name);
 
-    public abstract boolean contains(String name);
+    public boolean contains(String name);
 
 }

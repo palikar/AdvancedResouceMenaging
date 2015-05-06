@@ -39,15 +39,18 @@ import javax.swing.event.ListSelectionListener;
  *
  * @author Stanisalv
  */
-public class SetSubjectFrame extends JFrame implements WindowFocusListener, WindowListener, ListSelectionListener {
+public class SetSubjectFrame extends JFrame implements WindowFocusListener, WindowListener, ListSelectionListener
+{
 
     JList<SubjectPlaceHolder> subs, teachers;
     DefaultListModel<SubjectPlaceHolder> subjectsModel, teachersModel;
     String clas;
     int day, hour;
-    int hoveredIntex = -1;
+    int hoveredIndex = -1;
+    boolean skipConditions = false;
 
-    public SetSubjectFrame(Object[] subjects, int day, int hour, String clas) {
+    public SetSubjectFrame(Object[] subjects, int day, int hour, String clas)
+    {
         super("Поставяне на предмет");
         //<editor-fold defaultstate="collapsed" desc="Basic frame custumazation">
         setLayout(null);
@@ -59,9 +62,11 @@ public class SetSubjectFrame extends JFrame implements WindowFocusListener, Wind
         setVisible(true);
         //</editor-fold>
 
-        try {
+        try
+        {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex)
+        {
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -78,25 +83,31 @@ public class SetSubjectFrame extends JFrame implements WindowFocusListener, Wind
         sp2.setBounds(2, 2, 285, 150);
         subs.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         subs.setFont(new Font("SansSerif", Font.ITALIC, 20));
-        subs.setCellRenderer(new ListCellRenderer<Object>() {
+        subs.setCellRenderer(new ListCellRenderer<Object>()
+        {
 
             @Override
-            public Component getListCellRendererComponent(JList<? extends Object> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                if (value instanceof SubjectPlaceHolder) {
+            public Component getListCellRendererComponent(JList<? extends Object> list, Object value, int index, boolean isSelected, boolean cellHasFocus)
+            {
+                if (value instanceof SubjectPlaceHolder)
+                {
                     JLabel lable;
                     SubjectPlaceHolder sub = (SubjectPlaceHolder) value;
                     lable = new JLabel();
                     lable.setText("<html><strong>" + sub.getSubject() + "</strong><br>" + sub.getTeacher() + "</html>");
                     lable.setFont(new Font("SansSerif", Font.PLAIN, 15));
                     lable.setOpaque(true);
-                    if (isSelected) {
+                    if (isSelected)
+                    {
                         lable.setBackground(subs.getSelectionBackground());
                         lable.setForeground(subs.getSelectionForeground());
-                    } else {
+                    } else
+                    {
                         lable.setBackground(subs.getBackground());
                         lable.setForeground(subs.getForeground());
                     }
-                    if (index == hoveredIntex) {
+                    if (index == hoveredIndex)
+                    {
                         lable.setBackground(Colors.choosenSubject);
 
                     }
@@ -107,19 +118,23 @@ public class SetSubjectFrame extends JFrame implements WindowFocusListener, Wind
         });
         subs.addListSelectionListener(this);
 
-        subs.addMouseMotionListener(new MouseAdapter() {
-            public void mouseMoved(MouseEvent me) {
+        subs.addMouseMotionListener(new MouseAdapter()
+        {
+            public void mouseMoved(MouseEvent me)
+            {
                 Point p = new Point(me.getX(), me.getY());
                 int index = subs.locationToIndex(p);
-                if (index != hoveredIntex) {
-                    hoveredIntex = index;
+                if (index != hoveredIndex)
+                {
+                    hoveredIndex = index;
                     subs.repaint();
                 }
             }
         });
 
         add(sp2);
-        for (int i = 0; i < subjects.length; i++) {
+        for (int i = 0; i < subjects.length; i++)
+        {
             SubjectPlaceHolder sub = (SubjectPlaceHolder) subjects[i];
             subjectsModel.addElement(sub);
         }
@@ -131,13 +146,21 @@ public class SetSubjectFrame extends JFrame implements WindowFocusListener, Wind
 
     }
 
-    @Override
-    public void windowGainedFocus(WindowEvent e) {
+    public void overrideLimitations()
+    {
+        skipConditions = true;
     }
 
     @Override
-    public void windowLostFocus(WindowEvent e) {
-        if (e.getWindow().isShowing()) {
+    public void windowGainedFocus(WindowEvent e)
+    {
+    }
+
+    @Override
+    public void windowLostFocus(WindowEvent e)
+    {
+        if (e.getWindow().isShowing())
+        {
             Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 
         }
@@ -145,44 +168,60 @@ public class SetSubjectFrame extends JFrame implements WindowFocusListener, Wind
     }
 
     @Override
-    public void windowOpened(WindowEvent e) {
+    public void windowOpened(WindowEvent e)
+    {
     }
 
     @Override
-    public void windowClosing(WindowEvent e) {
+    public void windowClosing(WindowEvent e)
+    {
         this.dispose();
-        if (subs.getSelectedIndex() == -1) {
+        if (subs.getSelectedIndex() == -1)
+        {
             return;
-        } else {
-            String msg = GlobalSpace.classController.setSubject(clas, day, hour, subs.getSelectedValue());;
-            if (msg != null) {
-                JOptionPane.showMessageDialog(null, msg, "Невъзможно добавяне", JOptionPane.WARNING_MESSAGE);
-            }
         }
+        if (skipConditions)
+        {
+            GlobalSpace.classController.setSubjectWithNoChecks(clas, day, hour, subs.getSelectedValue());
+            return;
+        }
+
+        String msg = GlobalSpace.classController.setSubject(clas, day, hour, subs.getSelectedValue());;
+        if (msg != null)
+        {
+            JOptionPane.showMessageDialog(this, msg, "Невъзможно добавяне", JOptionPane.WARNING_MESSAGE);
+        }
+
     }
 
     @Override
-    public void windowClosed(WindowEvent e) {
+    public void windowClosed(WindowEvent e)
+    {
     }
 
     @Override
-    public void windowIconified(WindowEvent e) {
+    public void windowIconified(WindowEvent e)
+    {
     }
 
     @Override
-    public void windowDeiconified(WindowEvent e) {
+    public void windowDeiconified(WindowEvent e)
+    {
     }
 
     @Override
-    public void windowActivated(WindowEvent e) {
+    public void windowActivated(WindowEvent e)
+    {
     }
 
     @Override
-    public void windowDeactivated(WindowEvent e) {
+    public void windowDeactivated(WindowEvent e)
+    {
     }
 
     @Override
-    public void valueChanged(ListSelectionEvent e) {
+    public void valueChanged(ListSelectionEvent e)
+    {
         Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
 }

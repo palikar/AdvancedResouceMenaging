@@ -32,11 +32,13 @@ public class ScheduleFabrik
     static public Controller algControll;
     static public ClassChecker mistakeFinder;
     static public Map<String, ArrayList<Point>> holes;
+    static public Map<String, ArrayList<Point>> loners;
 
     static
     {
         mistakeFinder = new ClassChecker();
         holes = new HashMap<>();
+        loners = new HashMap<>();
     }
 
 }

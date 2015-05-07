@@ -111,6 +111,8 @@ public class GlobalSpace
 
     public static void runMistakeChecker()
     {
+        ScheduleFabrik.holes.clear();
+        ScheduleFabrik.loners.clear();
         ScheduleFabrik.mistakeFinder.findMistakes(classController.getClasses());
     }
 

@@ -60,12 +60,13 @@ public class ClassChecker
 
         }
         ScheduleFabrik.holes.putAll(checkForHoles());
+        ScheduleFabrik.loners.putAll(checkForLoners());
 
     }
 
     private Map<String, ArrayList<Point>> checkForHoles()
     {
-        ScheduleFabrik.holes.clear();
+
         Map<String, ArrayList<Point>> holes = new HashMap<>();
 
         for (int i = 0; i < classesNameOrder.size(); i++)
@@ -103,6 +104,32 @@ public class ClassChecker
         }
 
         return holes;
+    }
+
+    private Map<String, ArrayList<Point>> checkForLoners()
+    {
+        Map<String, ArrayList<Point>> loners = new HashMap<>();
+
+        for (int i = 0; i < classesNameOrder.size(); i++)
+        {
+            for (int j = 0; j < 5; j++)
+            {
+                for (int k = 1; k < 7 - 1; k++)
+                {
+                    if (!subsArray[i][j][k].equals(empty) && (subsArray[i][j][k - 1].equals(empty) && subsArray[i][j][k + 1].equals(empty)))
+                    {
+                        if (!loners.containsKey(classesNameOrder.get(i)))
+                        {
+                            loners.put(classesNameOrder.get(i), new ArrayList<Point>());
+                        }
+                        loners.get(classesNameOrder.get(i)).add(new Point(j, k));
+                    }
+                }
+            }
+        }
+
+        return loners;
+
     }
 
     public class SubjectLocation

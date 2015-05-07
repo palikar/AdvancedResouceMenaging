@@ -58,7 +58,7 @@ public class CleanupToolTab extends GradientPanel
 
     DefaultListModel<Object> classesModel;
     JList<Object> classes;
-    JButton set, swap, remove, showFull;
+    JButton set, swap, remove, showFull, clear;
     WeekTable simpleTable;
     JLabel teacher, subject;
     JFrame newFrame;
@@ -83,9 +83,10 @@ public class CleanupToolTab extends GradientPanel
 
         JScrollPane sp2 = new JScrollPane(classes);
         sp2.setPreferredSize(new Dimension(230, 400));
-        add(sp2, "gapleft 0.5cm,spany 4");
+        add(sp2, "gapleft 0.5cm,spany 5");
 
         simpleTable = new WeekTable();
+        simpleTable.setToolTipText(GlobalStrings.simpleWeekTableDesc);
         add(simpleTable, "gapleft 0.5cm,wrap 0.25cm");
 
         showFull = GUIElements.getButton("Покажи цяла");
@@ -93,7 +94,14 @@ public class CleanupToolTab extends GradientPanel
         {
             showFullTable();
         });
-        add(showFull, "gapleft 0.5cm,align left,aligny top,wrap 0.5cm");
+        add(showFull, "gapleft 0.5cm,align left,aligny top,split 2");
+
+        clear = GUIElements.getButton("Изчисти");
+        clear.addActionListener((e) ->
+        {
+            simpleTable.unselectAll();
+        });
+        add(clear, "gapleft 0.5cm,align left,aligny top,wrap 0.5cm");
 
         add(subject = new JLabel(GlobalStrings.subjectString), "gaptop 0.5cm, gapleft 0.5cm, wrap 0.25cm,aligny top");
         add(teacher = new JLabel(GlobalStrings.teacherString), "gapleft 0.5cm,wrap 0.25cm,aligny top");
@@ -162,6 +170,14 @@ public class CleanupToolTab extends GradientPanel
                 simpleTable.changeColor(p.x, p.y, Color.red);
             });
         }
+        if (ScheduleFabrik.loners.containsKey(clas))
+        {
+            ArrayList<Point> loners = ScheduleFabrik.loners.get(clas);
+            loners.forEach((Point p) ->
+            {
+                simpleTable.changeColor(p.x, p.y, Color.green);
+            });
+        }
     }
 
     private void swapSubjects()
@@ -181,7 +197,6 @@ public class CleanupToolTab extends GradientPanel
         }
 
         GlobalSpace.classController.swap(clas, selection.get(0), selection.get(1));
-        
 
         if (fullOpened)
         {
@@ -204,10 +219,12 @@ public class CleanupToolTab extends GradientPanel
         {
             teacher.setText(GlobalStrings.teacherString);
             subject.setText(GlobalStrings.subjectString);
-            return;
+
+        } else
+        {
+            teacher.setText(GlobalStrings.teacherString + sub.getTeacher());
+            subject.setText(GlobalStrings.subjectString + sub.getSubject());
         }
-        teacher.setText(GlobalStrings.teacherString + sub.getTeacher());
-        subject.setText(GlobalStrings.subjectString + sub.getSubject());
         if (fullOpened)
         {
             fullTable.changeSelection(simpleTable.getLastSelected().y, simpleTable.getLastSelected().x + 1, false, false);

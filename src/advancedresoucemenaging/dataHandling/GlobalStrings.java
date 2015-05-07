@@ -95,4 +95,7 @@ public class GlobalStrings
     public static String mistakeCheckerSkip = "Презкачане на прогверката за грешки";
     public static String mistakeCheckerSkipToolTipString = "Програмата няма да провери първоначално изготвеното разписание за грешки";
     public static String alwaysOnTopString = "Винаги отгоре";
+    public static String randomizeString = "Разбъркай";
+    public static String simpleWeekTableDesc = "<html>Червен цвят - дупка в програмата<br>"
+            + "Зелен цвят - \"самотен\" предмет</html>";
 }

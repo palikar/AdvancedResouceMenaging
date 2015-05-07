@@ -133,7 +133,7 @@ public class StudentScheduleTab extends GradientPanel
         });
         add(makePlan, "gapleft 0.5cm");
 
-        randomize = GUIElements.getButton("Разбъркай");
+        randomize = GUIElements.getButton(GlobalStrings.randomizeString);
         randomize.addActionListener((e) ->
         {
             GlobalSpace.classController.randomize();

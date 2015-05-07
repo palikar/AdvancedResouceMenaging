@@ -18,7 +18,6 @@ package advancedresoucemenaging.algStuff;
 
 import advancedresoucemenaging.dataHandling.GlobalSettings;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.ListIterator;
 
 /**
@@ -91,9 +90,10 @@ public final class Controller
 
             SubjectPlaceHolder sub = node.domain.get(i);
             node.set(sub);
-            if(checkForHoles()){
-                node.unSet();
-                continue;
+            if (checkForHoles())
+            {
+              //  node.unSet();
+                //  continue;
             }
 
             if (!node.sameClass.isReady())

@@ -17,7 +17,9 @@
 package advancedresoucemenaging.dataHandling;
 
 import advancedresoucemenaging.algStuff.SubjectPlaceHolder;
+import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -46,7 +48,6 @@ public class ClassChecker
         ArrayList<Class> classesList = new ArrayList<>(classes.values());
         for (int i = 0; i < classesList.size(); i++)
         {
-            System.out.println(classesList.get(i).getName());
             classesNameOrder.add(classesList.get(i).getName());
             for (int j = 0; j < 5; j++)
             {
@@ -58,25 +59,14 @@ public class ClassChecker
             }
 
         }
-        startFixing();
+        ScheduleFabrik.holes.putAll(checkForHoles());
 
     }
 
-    private void startFixing()
+    private Map<String, ArrayList<Point>> checkForHoles()
     {
-        boolean noHoles = true;
-        int cntPasses = 0, maxPasses = 1;
-        do
-        {
-            ArrayList<SubjectLocation> holes = checkForHoles();
-            noHoles = holes.isEmpty();
-
-        } while (!noHoles && ++cntPasses <= maxPasses);
-    }
-
-    private ArrayList<SubjectLocation> checkForHoles()
-    {
-        ArrayList<SubjectLocation> list = new ArrayList<>();
+        ScheduleFabrik.holes.clear();
+        Map<String, ArrayList<Point>> holes = new HashMap<>();
 
         for (int i = 0; i < classesNameOrder.size(); i++)
         {
@@ -88,14 +78,22 @@ public class ClassChecker
                     {
                         if (k - 1 < 0 || !subsArray[i][j][k + 1].equals(empty))
                         {
-                            list.add(new SubjectLocation(i, j, k));
+                            if (!holes.containsKey(classesNameOrder.get(i)))
+                            {
+                                holes.put(classesNameOrder.get(i), new ArrayList<>());
+                            }
+                            holes.get(classesNameOrder.get(i)).add(new Point(j, k));
                             continue;
                         }
 
                         if (!subsArray[i][j][k + 1].equals(empty)
                                 && !subsArray[i][j][k - 1].equals(empty))
                         {
-                            list.add(new SubjectLocation(i, j, k));
+                            if (!holes.containsKey(classesNameOrder.get(i)))
+                            {
+                                holes.put(classesNameOrder.get(i), new ArrayList<>());
+                            }
+                            holes.get(classesNameOrder.get(i)).add(new Point(j, k));
 
                         }
 
@@ -104,7 +102,7 @@ public class ClassChecker
             }
         }
 
-        return list;
+        return holes;
     }
 
     public class SubjectLocation

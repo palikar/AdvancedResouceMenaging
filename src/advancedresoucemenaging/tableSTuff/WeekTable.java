@@ -42,6 +42,7 @@ public class WeekTable extends JTable
 
     private Color[][] customColors = new Color[5][7];
     private boolean[][] customSelection = new boolean[5][7];
+    private Color[][] specialColors = new Color[5][7];
     private Point lastSelected;
     private Action valueChanged;
 
@@ -55,6 +56,7 @@ public class WeekTable extends JTable
             for (int j = 0; j < 7; j++)
             {
                 customColors[i][j] = Colors.weekTableDisabledColor;
+                specialColors[i][j] = Colors.weekTableDisabledColor;
                 customSelection[i][j] = false;
             }
         }
@@ -79,14 +81,22 @@ public class WeekTable extends JTable
             @Override
             public void mouseClicked(MouseEvent e)
             {
+                int x = e.getX() / colWidth;
+                int y = e.getY() / rowHeght;
+                if (x >= 5 || y >= 7 || x < 0 || y < 0)
+                {
+                    return;
+                }
+
                 if (e.getButton() == MouseEvent.BUTTON3)
                 {
-                    changeValue(e.getX() / colWidth, e.getY() / rowHeght, Colors.weekTableDisabledColor);
+                    changeValue(x, y,
+                            specialColors[x][y]);
                 } else
                 {
-                    if (changeValue(e.getX() / colWidth, e.getY() / rowHeght, Colors.weekTableEnabledColor))
+                    if (changeValue(x, y, Colors.weekTableEnabledColor))
                     {
-                        lastSelected.setLocation(e.getX() / colWidth, e.getY() / rowHeght);
+                        lastSelected.setLocation(x, y);
                         if (valueChanged != null)
                         {
                             valueChanged.perform();
@@ -124,14 +134,21 @@ public class WeekTable extends JTable
             @Override
             public void mouseDragged(MouseEvent e)
             {
+                int x = e.getX() / colWidth;
+                int y = e.getY() / rowHeght;
+                if (x >= 5 || y >= 7 || x < 0 || y < 0)
+                {
+                    return;
+                }
                 if (e.getModifiersEx() == MouseEvent.BUTTON3_DOWN_MASK)
                 {
-                    changeValue(e.getX() / colWidth, e.getY() / rowHeght, Colors.weekTableDisabledColor);
+                    changeValue(x, y,
+                            specialColors[x][y]);
                 } else
                 {
-                    if (changeValue(e.getX() / colWidth, e.getY() / rowHeght, Colors.weekTableEnabledColor))
+                    if (changeValue(x, y, Colors.weekTableEnabledColor))
                     {
-                        lastSelected.setLocation(e.getX() / colWidth, e.getY() / rowHeght);
+                        lastSelected.setLocation(x, y);
                         if (valueChanged != null)
                         {
                             valueChanged.perform();
@@ -147,6 +164,18 @@ public class WeekTable extends JTable
         });
         setPreferredSize(new Dimension(colWidth * getColumnCount(), rowHeght * getRowCount()));
 
+    }
+
+    public void changeColor(int day, int hour, Color value)
+    {
+
+        if (customColors[day][hour].getRGB() == value.getRGB())
+        {
+            return;
+        }
+        customColors[day][hour] = value;
+        specialColors[day][hour] = value;
+        tableChanged(new TableModelEvent(getModel(), hour));
     }
 
     public boolean changeValue(int day, int hour, Color value)
@@ -208,7 +237,28 @@ public class WeekTable extends JTable
             for (int j = 0; j < 7; j++)
             {
                 customSelection[i][j] = false;
-                customColors[i][j] = Colors.weekTableDisabledColor;
+                customColors[i][j] = specialColors[i][j];
+            }
+        }
+        tableChanged(new TableModelEvent(getModel()));
+    }
+
+    public void resetColors()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            for (int j = 0; j < 7; j++)
+            {
+                //customSelection[i][j] = false;
+                if (customSelection[i][j])
+                {
+                    customColors[i][j] = Colors.weekTableEnabledColor;
+                } else
+                {
+                    customColors[i][j] = Colors.weekTableDisabledColor;
+                }
+                specialColors[i][j] = Colors.weekTableDisabledColor;
+
             }
         }
         tableChanged(new TableModelEvent(getModel()));

@@ -22,6 +22,7 @@ import advancedresoucemenaging.GUIClasses.GradientPanel;
 import advancedresoucemenaging.algStuff.SubjectPlaceHolder;
 import advancedresoucemenaging.dataHandling.GlobalSpace;
 import advancedresoucemenaging.dataHandling.GlobalStrings;
+import advancedresoucemenaging.dataHandling.ScheduleFabrik;
 import advancedresoucemenaging.tableSTuff.JLableCellRenderer;
 import advancedresoucemenaging.tableSTuff.StudentPlanTableModel;
 import advancedresoucemenaging.tableSTuff.SubjectCellRenderer;
@@ -29,6 +30,7 @@ import advancedresoucemenaging.tableSTuff.WeekTable;
 import com.alee.laf.menu.WebCheckBoxMenuItem;
 import com.alee.laf.menu.WebMenu;
 import com.alee.laf.menu.WebMenuBar;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Point;
@@ -100,11 +102,13 @@ public class CleanupToolTab extends GradientPanel
         set.addActionListener((e) ->
         {
             setSubject();
+
         });
         add(set, "gapleft 0.5cm,skip,split");
         swap = GUIElements.getButton("Размени");
         swap.addActionListener((e) ->
         {
+            swapSubjects();
         });
         add(swap, "gapleft 0.5cm");
         remove = GUIElements.getButton("Премахни");
@@ -129,17 +133,62 @@ public class CleanupToolTab extends GradientPanel
     private void changeTables()
     {
         simpleTable.unselectAll();
+        int index = classes.getSelectedIndex();
+        if (index == -1)
+        {
+            return;
+        }
+        advancedresoucemenaging.dataHandling.Class clas = GlobalSpace.classController.getClasses().get(classes.getSelectedValue());
+
         if (fullOpened)
         {
-            int index = classes.getSelectedIndex();
-            if (index == -1)
-            {
-                return;
-            }
-            advancedresoucemenaging.dataHandling.Class clas = GlobalSpace.classController.getClasses().get(classes.getSelectedValue());
+
             model.setSelected(clas.getName());
             model.fireTableDataChanged();
         }
+
+        updateMistakes(clas.getName());
+
+    }
+
+    private void updateMistakes(String clas)
+    {
+        simpleTable.resetColors();
+        if (ScheduleFabrik.holes.containsKey(clas))
+        {
+            ArrayList<Point> holes = ScheduleFabrik.holes.get(clas);
+            holes.forEach((Point p) ->
+            {
+                simpleTable.changeColor(p.x, p.y, Color.red);
+            });
+        }
+    }
+
+    private void swapSubjects()
+    {
+        int index = classes.getSelectedIndex();
+        if (index == -1)
+        {
+            return;
+        }
+        advancedresoucemenaging.dataHandling.Class clas = GlobalSpace.classController.getClasses().get(classes.getSelectedValue());
+
+        ArrayList<Point> selection = simpleTable.getSelected();
+        if (selection.size() != 2)
+        {
+            simpleTable.unselectAll();
+            return;
+        }
+
+        GlobalSpace.classController.swap(clas, selection.get(0), selection.get(1));
+        
+
+        if (fullOpened)
+        {
+            model.fireTableDataChanged();
+        }
+        GlobalSpace.runMistakeChecker();
+        updateMistakes(classes.getSelectedValue().toString());
     }
 
     private void changeLables()
@@ -177,7 +226,7 @@ public class CleanupToolTab extends GradientPanel
         {
             GlobalSpace.classController.getClasses().get(classes.getSelectedValue())
                     .getSchedule()[p.x][p.y] = SubjectPlaceHolder.empty;
-            
+
         });
         if (fullOpened)
         {
@@ -186,6 +235,9 @@ public class CleanupToolTab extends GradientPanel
         teacher.setText(GlobalStrings.teacherString);
         subject.setText(GlobalStrings.subjectString);
         simpleTable.unselectAll();
+        GlobalSpace.runMistakeChecker();
+        updateMistakes(classes.getSelectedValue().toString());
+
     }
 
     private void showFullTable()
@@ -324,6 +376,8 @@ public class CleanupToolTab extends GradientPanel
                 {
                     fullTable.tableChanged(new TableModelEvent(fullTable.getModel()));
                 }
+                GlobalSpace.runMistakeChecker();
+                updateMistakes(classes.getSelectedValue().toString());
             }
 
         });

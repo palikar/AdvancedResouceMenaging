@@ -29,7 +29,6 @@ import advancedresoucemenaging.tableSTuff.StudentPlanTableModel;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -41,24 +40,28 @@ import net.miginfocom.swing.MigLayout;
  *
  * @author Stanisalv
  */
-public class StudentScheduleTab extends GradientPanel {
+public class StudentScheduleTab extends GradientPanel
+{
 
     JComboBox<Object> classes;
-    JButton print, makePlan;
+    JButton print, makePlan, randomize;
     JTable table;
     JScrollPane sp;
     StudentPlanTableModel model;
 
-    public StudentScheduleTab() {
+    public StudentScheduleTab()
+    {
         super(new MigLayout());
 
         JLabel classL = new JLabel(GlobalStrings.classString);
-        add(classL, "gapleft 0.5cm,gaptop 0.5cm,split 4");
+        add(classL, "gapleft 0.5cm,gaptop 0.5cm,split 5");
 
         classes = GUIElements.getComboField();
         classes.setPreferredSize(new Dimension(125, 35));
-        classes.addActionListener((event) -> {
-            if (classes.getSelectedIndex() != -1) {
+        classes.addActionListener((event) ->
+        {
+            if (classes.getSelectedIndex() != -1)
+            {
                 TableControl.selectedClass = classes.getSelectedItem().toString();
                 model.fireTableDataChanged();
             }
@@ -67,17 +70,21 @@ public class StudentScheduleTab extends GradientPanel {
 
         print = GUIElements.getButton(GlobalStrings.saveToPdfString);
         print.setBounds(225, 25, 150, 35);
-        print.addActionListener((e) -> {
+        print.addActionListener((e) ->
+        {
             JFileChooser chooser = new JFileChooser();
             chooser.setFont(new Font("SansSerif", Font.ITALIC | Font.BOLD, 10));
             chooser.setSelectedFile(new File("School_Schadule_" + System.currentTimeMillis() / 1000 + ".pdf"));
 
-            if (chooser.showSaveDialog(this) == chooser.APPROVE_OPTION) {
+            if (chooser.showSaveDialog(this) == chooser.APPROVE_OPTION)
+            {
 
-                try {
+                try
+                {
                     SavingLoadingSystem.saveClassesScheduleToPdf(
                             new File(chooser.getSelectedFile().getCanonicalPath() + ".pdf"));
-                } catch (IOException ex) {
+                } catch (IOException ex)
+                {
                     Logger.getLogger(StudentScheduleTab.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -86,11 +93,14 @@ public class StudentScheduleTab extends GradientPanel {
 
         makePlan = GUIElements.getButton(GlobalStrings.makeString);
         makePlan.setBounds(385, 25, 125, 35);
-        makePlan.addActionListener((ActionEvent event) -> {
-            new Thread(new Runnable() {
+        makePlan.addActionListener((ActionEvent event) ->
+        {
+            new Thread(new Runnable()
+            {
 
                 @Override
-                public void run() {
+                public void run()
+                {
                     GlobalSpace.setUpController();
                     GlobalSpace.makePlan();
                     model.fireTableDataChanged();
@@ -98,17 +108,22 @@ public class StudentScheduleTab extends GradientPanel {
 
                 }
             }).start();
-            new Thread(new Runnable() {
+            new Thread(new Runnable()
+            {
 
                 @Override
-                public void run() {
-                    while (!GlobalSpace.ready) {
-                        try {
+                public void run()
+                {
+                    while (!GlobalSpace.ready)
+                    {
+                        try
+                        {
                             GlobalSpace.updateClassController();
                             model.fireTableDataChanged();
                             table.repaint();
                             Thread.sleep(50);
-                        } catch (InterruptedException ex) {
+                        } catch (InterruptedException ex)
+                        {
                             Logger.getLogger(StudentScheduleTab.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
@@ -116,7 +131,16 @@ public class StudentScheduleTab extends GradientPanel {
                 }
             }).start();
         });
-        add(makePlan, "wrap 0.5cm");
+        add(makePlan, "gapleft 0.5cm");
+
+        randomize = GUIElements.getButton("Разбъркай");
+        randomize.addActionListener((e) ->
+        {
+            GlobalSpace.classController.randomize();
+            TableControl.selectedClass = classes.getSelectedItem().toString();
+            model.fireTableDataChanged();
+        });
+        add(randomize, "gapleft 0.5cm , wrap 0.5cm");
 
         model = new StudentPlanTableModel();
         table = new JTable(model);
@@ -155,9 +179,11 @@ public class StudentScheduleTab extends GradientPanel {
         add(sp, "gapleft 0.5cm");
     }
 
-    public void refresh() {
+    public void refresh()
+    {
         classes.removeAllItems();
-        for (advancedresoucemenaging.dataHandling.Class clas : GlobalSpace.classController.getClasses().values()) {
+        for (advancedresoucemenaging.dataHandling.Class clas : GlobalSpace.classController.getClasses().values())
+        {
             classes.addItem(clas.getName());
         }
     }

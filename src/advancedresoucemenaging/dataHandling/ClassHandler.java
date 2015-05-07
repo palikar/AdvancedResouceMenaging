@@ -22,9 +22,11 @@ import advancedresoucemenaging.algStuff.Controller;
 import advancedresoucemenaging.algStuff.DayNode;
 import advancedresoucemenaging.algStuff.HourNode;
 import advancedresoucemenaging.algStuff.SubjectPlaceHolder;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 /**
  *
@@ -35,6 +37,7 @@ public class ClassHandler implements Handler
 
     private Map<String, Class> classes;
     public static final SubjectPlaceHolder emptySub = new SubjectPlaceHolder();
+    private static final Random ranodm = new Random();
 
     public ClassHandler()
     {
@@ -208,6 +211,48 @@ public class ClassHandler implements Handler
     public Map<String, Class> getClasses()
     {
         return classes;
+    }
+
+    public void swap(Class clas, Point subLoc1, Point subLoc2)
+    {
+        SubjectPlaceHolder sub1 = clas.getSchedule()[subLoc1.x][subLoc1.y];
+        SubjectPlaceHolder sub2 = clas.getSchedule()[subLoc2.x][subLoc2.y];
+        SubjectPlaceHolder subTemp = new SubjectPlaceHolder(sub1.getSubject(), sub1.getTeacher());
+        sub1.setSubject(sub2.getSubject());
+        sub1.setTeacher(sub2.getTeacher());
+        sub2.setSubject(subTemp.getSubject());
+        sub2.setTeacher(subTemp.getTeacher());
+    }
+
+    public void randomize()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            for (int j = 0; j < 7; j++)
+            {
+                for (int k = 0; k < 3; k++)
+                {
+                    int newIndex = ranodm.nextInt(7);
+                    boolean suc = true;
+                    for (Class clas : classes.values())
+                    {
+                        if (clas.getSchedule()[i][j].equals(SubjectPlaceHolder.empty) || clas.getSchedule()[i][newIndex].equals(SubjectPlaceHolder.empty))
+                        {
+                            suc = false;
+                            break;
+                        }
+                    }
+                    if (!suc)
+                    {
+                        continue;
+                    }
+                    for (Class clas : classes.values())
+                    {
+                        swap(clas, new Point(i, j), new Point(i, newIndex));
+                    }
+                }
+            }
+        }
     }
 
 }

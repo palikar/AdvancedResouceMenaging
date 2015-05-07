@@ -23,7 +23,6 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -105,9 +104,14 @@ public class GlobalSpace
             ScheduleFabrik.algControll.make();
         });
         updateClassController();
-        ScheduleFabrik.mistakeFinder.findMistakes(classController.getClasses());
+        runMistakeChecker();
         ready = true;
 
+    }
+
+    public static void runMistakeChecker()
+    {
+        ScheduleFabrik.mistakeFinder.findMistakes(classController.getClasses());
     }
 
     public static void updateClassController()

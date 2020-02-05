@@ -148,16 +148,18 @@ public class SavingLoadingSystem {
             bufferedWriter.write("end!");
             bufferedWriter.newLine();
 
+            
             for (Entry<String, Class> clas : GlobalSpace.classController.getClasses().entrySet()) {
-                bufferedWriter.write(clas.getKey());
+              bufferedWriter.write(clas.getKey());
+              bufferedWriter.newLine();
+              for (Entry<SubjectPlaceHolder, Integer> subject : clas.getValue().getSubjectPlan().entrySet()) {
+                bufferedWriter.write(subject.getKey().getSubject()
+                                     + "|" + subject.getKey().getTeacher() + "|" + subject.getValue());
                 bufferedWriter.newLine();
-                for (Entry<SubjectPlaceHolder, Integer> subject : clas.getValue().getSubjectPlan().entrySet()) {
-                    bufferedWriter.write(subject.getKey().getSubject()
-                            + "|" + subject.getKey().getTeacher() + "|" + subject.getValue());
-                    bufferedWriter.newLine();
-                }
-                bufferedWriter.write("newClass!");
-                bufferedWriter.newLine();
+              }
+              bufferedWriter.write("newClass!");
+              bufferedWriter.newLine();
+              
             }
 
             bufferedWriter.write("end!");

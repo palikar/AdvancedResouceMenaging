@@ -1,0 +1,57 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+sourceSets {
+  main {
+    java {
+      srcDir 'src'
+    }
+    resources {
+      srcDir 'resources'
+    }
+  }
+}
+
+dependencies {
+  compile files( 'lib/itextpdf-5.5.5.jar')
+  compile files( 'lib/miglayout-4.0.jar')
+  compile files( 'lib/weblaf-complete-1.28.jar')
+}
+
+
+
+task fatJar(type: Jar) {
+  manifest.from jar.manifest
+  classifier = 'all'
+  from {
+    configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+  } {
+    exclude "META-INF/*.SF"
+    exclude "META-INF/*.DSA"
+    exclude "META-INF/*.RSA"
+  }
+  with jar
+}
+
+
+
+jar {
+  manifest {
+    attributes(
+      'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+      'Main-Class': 'advancedresoucemenaging.AdvancedResouceMenaging'
+    )
+  }
+}
+
+
+if (!hasProperty('mainClass')) {
+    ext.mainClass = 'advancedresoucemenaging.AdvancedResouceMenaging'
+}
+
+mainClassName = ext.mainClass

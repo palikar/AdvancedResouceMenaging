@@ -1,0 +1,31 @@
+#+options: ':t *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline author:t
+#+options: broken-links:nil c:nil creator:nil d:(not "LOGBOOK")
+#+options: date:t e:t email:nil f:t inline:t num:t p:nil pri:nil
+#+options: prop:nil stat:t tags:t tasks:t tex:t timestamp:t title:t
+#+options: toc:t todo:t |:t
+#+title: README
+#+date: <2020-02-05 Wed>
+#+author: Stanislav Arnaudov
+#+email: stanislav.arn@gmail.com
+#+language: en
+#+select_tags: export
+#+exclude_tags: noexport
+#+creator: Emacs 26.3 (Org mode 9.3.2)
+
+
+* Advance Resources Management
+
+** 
+
+** Building
+
+#+BEGIN_SRC sh
+git clone https://github.com/palikar/AdvancedResouceMenaging
+gradle fatJar
+#+END_SRC
+
+To run it:
+
+#+BEGIN_SRC sh
+java -jar ./build/libs/AdvancedResouceMenaging-all.jar
+#+END_SRC

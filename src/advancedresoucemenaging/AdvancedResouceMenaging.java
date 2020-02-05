@@ -31,6 +31,7 @@ public class AdvancedResouceMenaging
         SwingUtilities.invokeLater(() ->
         {
             MainFrame mainFrame = new MainFrame();
+            
         });
 
     }

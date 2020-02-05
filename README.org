@@ -24,6 +24,12 @@ This is an early project of mine. It is an application written in java that is m
 I developed the program when I was in the high school and the project "secured" me a good spot in the rankings of the national competition for IT in Bulgaria. The application was targeted at bulgarian users so the UI is in bulgarian.
 
 ** Screenshots
+Here are some screenshots from the application. If you are not a bulgarian, it'll probably not make any sense to you but... enjoy anyway.
+
+[[./screenshots/screen_0.png]]
+[[./screenshots/screen_1.png]]
+[[./screenshots/screen_2.png]]
+[[./screenshots/screen_3.png]]
 
 ** Building
 

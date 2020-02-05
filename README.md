@@ -11,6 +11,10 @@ I developed the program when I was in the high school and the project &ldquo;sec
 
 ## Screenshots
 
+Here are some screenshots from the application. If you are not a bulgarian, it&rsquo;ll probably not make any sense to you but&#x2026; enjoy anyway.
+
+![img](./screenshots/screen_0.png) ![img](./screenshots/screen_1.png) ![img](./screenshots/screen_2.png) ![img](./screenshots/screen_3.png)
+
 
 ## Building
 

@@ -2,7 +2,7 @@
 #+options: broken-links:nil c:nil creator:nil d:(not "LOGBOOK")
 #+options: date:t e:t email:nil f:t inline:t num:t p:nil pri:nil
 #+options: prop:nil stat:t tags:t tasks:t tex:t timestamp:t title:t
-#+options: toc:t todo:t |:t
+#+options: toc:nil todo:t |:t
 #+title: README
 #+date: <2020-02-05 Wed>
 #+author: Stanislav Arnaudov
